@@ -19,7 +19,6 @@ def minimize_road_cost(road, TMs, time_cost):
     # REPEAT MADDA FACKA
 
 
-
     # return: tid, soc, pengar
 
 """ Returns the availability of all chargers in the selected span"""
@@ -27,15 +26,17 @@ def get_chargers_avail(idx_start, road, TMs):
     chargers = iterate(idx_start,road)
     # returns: charge_dict[charger] = (soc, total_time)
     char_avail = {}
-    " Går igenom alla chargers och returnera"
+    " Går igenom alla chargers och dess olika kapaciteter. "
     for charger, value in chargers.items():
         # caps = tuple(map(int, df[df['name'] == charger]['capacity'].split(",")))          Behövs inte längre men sparar för säkerhet
+        # Uses TMs to find the different capacities
         for cap in TMs[charger]:
+            # Set up
             initial_state = init_state(charger, cap)        # start vektorn för charger
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value[1]/60/30)
             predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
-            char_avail[charger][cap] = predictor.predict(steps=time_steps)
+            char_avail[charger][cap] = (charger[0], predictor.predict(steps=time_steps))
         # char_avail[charger] = (value[0], predict_avail.func(charger, math.floor(value[1]/60/30), current_avail))     # Returns list with predicted availability
     return char_avail   
 
