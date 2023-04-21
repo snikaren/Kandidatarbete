@@ -17,33 +17,17 @@ import random
     procentual availabillity"""
 """ Osäker på om denna behövs, men sparar sålänge """
 
-def calc_trans_matrix():
-    f = open('info.json')
-    f2 = open(r'C:\Users\Henrik\Documents\Chalmers\PythonProg\Charging_Station_availability\avail2023-03-13_16-43-55.json')
-    info = json.load(f)
-    avail = json.load(f2)
-    ave_list = []
-    pro_list = []
-    # Går igenom alla chargers i info
-    for i, charger in enumerate(info):
-        total_chargers = 0
-        tot = charger["total_chargers"]
-        for j in tot:
-            total_chargers += int(j['count'])
-        total_avail = 0
-        charger_name = charger['charger']
-        # samlar tillgängligheten för hela laddstationen
-        # Kollar att laddstationen finns, om ej hoppar över
-        try:
-            for k in range(len(avail[charger_name])):
-                for n in avail[charger_name][k][1]:
-                    total_avail += int(n)
-            average_avail = total_avail/len(avail[charger_name])
-            procent_avail = average_avail/total_chargers
-            ## Gör listor eller biblotek som sparar denna datan
-        except:
-            print(f"Charger: {charger_name} not in log")
-    return average_avail, procent_avail, total_chargers
+def init_state(name, capacity):
+    tot_dict = dict_tot()
+    cap_count = tot_dict[name][capacity].sort()
+    # create a pandas series
+    my_series = pd.Series(cap_count)
+
+    # get the count of occurrences of each unique value
+    value_counts = my_series.value_counts()
+    distribution_df = pd.DataFrame({'Value': value_counts.index, 'Count': value_counts.values})
+
+    return distribution_df
 
 
 """ returns a dictonary for the charching stations containing the availability over the measured period"""
@@ -120,6 +104,23 @@ class ChargingStationPredictor:
             
         return current_state_distribution
     
+def test_pred():
+    states = [0, 1, 2, 3, 4]
+    transition_matrix = np.array([[0.3, 0.4, 0.2, 0.1, 0], 
+                                [0.1, 0.3, 0.4, 0.2, 0], 
+                                [0, 0.1, 0.3, 0.4, 0.2], 
+                                [0.2, 0, 0.1, 0.3, 0.4], 
+                                [0.4, 0.2, 0, 0.1, 0.3]])
+    initial_state_distribution = np.array([0.2, 0.2, 0.2, 0.2, 0.2])
+
+    predictor = ChargingStationPredictor(states, transition_matrix, initial_state_distribution)
+
+    print(predictor.predict(steps=1))
+    print(predictor.predict(steps=2))
+
+def predict_avail(charger, timesteps, initial_state, trans_matrix):
+    predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
+    predictor.predict(steps=timesteps)
     
 if __name__ == '__main__':
-    main_pred()
+    print(init_state('396296', 50))

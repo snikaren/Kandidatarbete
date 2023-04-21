@@ -207,7 +207,7 @@ def iterate(idx_start, idx_end):
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc)
         total_distance += (dist_const_velo(index) + dist_acc(index))
-        total_time += (time_acc(index) + time_constant_velo(index))
+        total_time += (time_acc(index) + time_constant_velo(index))         # [s]
         battery_temperature += battery_temperature_change(index, soc, battery_temperature)
         #print(battery_temperature_change(index, soc, battery_temperature))
 
@@ -222,7 +222,7 @@ def iterate(idx_start, idx_end):
             # If there is a charger close, save it
             for charger in chargers:
                 if charger != "0":
-                    charge_dict[charger] = soc
+                    charge_dict[charger] = (soc, total_time)
 
             #  Adds second identical data point when charging
             indices.append(index)
@@ -238,7 +238,8 @@ def iterate(idx_start, idx_end):
 
             soc = 80
 
-        #else:
+        elif soc < 20:
+            return charge_dict
 
             """ Hämtar info för Plottar """
         indices.append(index)

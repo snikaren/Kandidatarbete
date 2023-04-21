@@ -1,13 +1,17 @@
-from predict import *
+from predict import main_pred, init_state, predict_avail, ChargingStationPredictor
+#from predict import *
 from Fordonsdynamik import *
+import math
+import pandas as pd
 
+df = pd.read_csv('chargers.csv')
 # Räknar ut minimala kostnaden för en väg
-def minimize_road_cost(road, time_cost):
+def minimize_road_cost(road, TMs, time_cost):
     # Simuluera fram tills vi måste ladda 
-    char_avail = get_chargers_avail(1, road)    # returns dict med charge_id(soc, avail)
+    char_avail = get_chargers_avail(1, road, TMs)    # returns dict med charge_id(soc, avail)
     
     # Välj den bästa laddaren
-
+    best_char = choose_charger(char_avail, TMs, time_cost)
         # Kör till punkten och ladda
         # ladda vid denna punkt
             # Kör hampus program
@@ -18,28 +22,38 @@ def minimize_road_cost(road, time_cost):
 
     # return: tid, soc, pengar
 
-def get_chargers_avail(idx_start, road):
+""" Returns the availability of all chargers in the selected span"""
+def get_chargers_avail(idx_start, road, TMs):
     chargers = iterate(idx_start,road)
     # returns: charge_dict[charger] = (soc, total_time)
     char_avail = {}
+    " Går igenom alla chargers och returnera"
     for charger, value in chargers.items():
-        current_avail = ca_func(charger)
-        char_avail[charger] = (value[0], predict.func(charger, value[1], current_avail))     # Returns list with predicted availability
-    return char_avail
+        # caps = tuple(map(int, df[df['name'] == charger]['capacity'].split(",")))          Behövs inte längre men sparar för säkerhet
+        for cap in TMs[charger]:
+            initial_state = init_state(charger, cap)        # start vektorn för charger
+            trans_matrix = TMs[charger][cap]
+            time_steps = math.floor(value[1]/60/30)
+            predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
+            char_avail[charger][cap] = predictor.predict(steps=time_steps)
+        # char_avail[charger] = (value[0], predict_avail.func(charger, math.floor(value[1]/60/30), current_avail))     # Returns list with predicted availability
+    return char_avail   
 
-def choose_charger(avail_dict, time_cost):
+
+
+def choose_charger(avail_dict, tc):
     for charger, value in avail_dict:   #value(SoC, Avail)
         soc = value[0]
         for avail in value[1]:
             ## Kolla kostnad         kr
-            capacity = capa_dict[avail]
+            capacity = capa_dict[charger][cap]
             cost_el = Func_price_from_capa (capacity)
             tot_el = Func_el_consum(soc, capacity)
             tot_cost_el = cost_el * tot_el 
         
             ## kolla tid att ladda   tid->kr
             time_charge = Func_time_charge
-            tot_cost_time = time_cost * time_charge
+            tot_cost_time = tc * time_charge
         
             ## Kolla avail           true/false      
             average_avail, tot_avail = avail(nånting)      
@@ -52,9 +66,11 @@ def choose_charger(avail_dict, time_cost):
 
         
 
-
+""" Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. *Ger även alla laddstationer man stannar vid"""
 def main():
-    min_cost =  minimize_road_cost(roads[0])
+    # skapa en funk som sparar cvs som roads[]
+    TMs = main_pred()
+    min_cost =  minimize_road_cost(roads[0], TMs)
     best_road = roads[0]
     for road in roads[1:]:
         tot_cost = minimize_road_cost(road)
