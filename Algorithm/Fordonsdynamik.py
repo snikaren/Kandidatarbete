@@ -5,9 +5,18 @@ import time
 import math as m
 import matplotlib.pyplot as plt
 
+# Dataframe uppsättning
+df = ""
 
-# df = pd.read_csv(r'C:\Users\Albert\OneDrive\Skrivbord\Fordonsdynamik_python\Fordonsdynamik\road_data.csv')
-df = pd.read_csv(r'C:\Users\Albert\OneDrive\Skrivbord\Fordonsdynamik_python\Fordonsdynamik\rutt_3.csv')
+def init_df(route):
+    global df
+    if route == 1:
+        df = pd.read_csv(r'Algorithm\rutt_1.csv')
+    elif route == 2:
+        df = pd.read_csv(r'Algorithm\rutt_2.csv')
+    else:
+        df = pd.read_csv(r'Algorithm\rutt_3.csv')
+
 grads = df['gradient to next']
 speed = df['speed limit']
 dists = df['dist to next[Km]']
@@ -179,7 +188,10 @@ def internal_resistance_battery(battery_temperature):
     return (90.196*m.e**(-0.08*(battery_temperature-274)) + 25.166)/1000
 
 
-def iterate(idx_start, idx_end):
+def iterate(idx_start, route):
+
+    # dataframe
+    init_df(route)
 
     # Starting values
     battery_temperature = 274  # Starting with ambient temp of air
@@ -201,7 +213,7 @@ def iterate(idx_start, idx_end):
     start_time = time.time()
     charge_dict = {}
     #  Iterating over road points
-    for index in range(idx_start, idx_end):
+    for index in range(idx_start, len(df)-1):
 
         # For every iteration calculate and add each import
         total_energy_consumption += total_energy(index)

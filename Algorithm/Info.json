@@ -1,0 +1,3102 @@
+[{
+  "charger": "396296",
+  "title": "Vättersmålen",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.92478,
+    "longitude": 14.32049
+  }
+},{
+  "charger": "22mr3",
+  "title": "IONITY Örebro",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 59.275063,
+    "longitude": 15.177728
+  }
+},{
+  "charger": "23d6j",
+  "title": "Circle K Klockartorpet",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.61468,
+    "longitude": 16.57641
+  }
+},{
+  "charger": "25jn8k",
+  "title": "Holmgrens Bil Skövde DC",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.420853,
+    "longitude": 13.875119
+  }
+},{
+  "charger": "25p56g",
+  "title": "OKQ8 Uppsala Säby",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.84441,
+    "longitude": 17.730461
+  }
+},{
+  "charger": "25wzxj",
+  "title": "Circle K Borås Hultasjögatan",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 57.719977,
+    "longitude": 12.971789
+  }
+},{
+  "charger": "26wqy",
+  "title": "Söderbergs Bil Nyköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    },
+    {
+      "count": 2,
+      "capacity": 100
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.746799,
+    "longitude": 16.995163
+  }
+},{
+  "charger": "28npwk",
+  "title": "Fridegårdsparken",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.63752,
+    "longitude": 17.07791
+  }
+},{
+  "charger": "28zxep",
+  "title": "Kungsgatan 97",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.848957,
+    "longitude": 17.660295
+  }
+},{
+  "charger": "2j2eej",
+  "title": "Allego Tornby Linköping",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 58.433701,
+    "longitude": 15.588425
+  }
+},{
+  "charger": "2j6gp5",
+  "title": "McDonalds Partille",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.74109,
+    "longitude": 12.126048
+  }
+},{
+  "charger": "2z3xx",
+  "title": "Traversgatan 4",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.613603,
+    "longitude": 16.467375
+  }
+},{
+  "charger": "397r3j",
+  "title": "OKQ8 Örebro Västhagagatan",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.270528,
+    "longitude": 15.175194
+  }
+},{
+  "charger": "39e5kp",
+  "title": "OKQ8 Huskvarna Vårstarondellen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.788846,
+    "longitude": 14.265471
+  }
+},{
+  "charger": "39ej7e",
+  "title": "Circle K Stockholm Midsommarkransen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.299715,
+    "longitude": 18.011615
+  }
+},{
+  "charger": "3jd2q",
+  "title": "Ödeshög Supercharger",
+  "total_chargers": [
+    {
+      "count": 14,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.227074,
+    "longitude": 14.668253
+  }
+},{
+  "charger": "3qg2q",
+  "title": "IONITY Mariestad",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 58.685551,
+    "longitude": 13.845325
+  }
+},{
+  "charger": "3ydn9k",
+  "title": "Mariestad Supercharger",
+  "total_chargers": [
+    {
+      "count": 16,
+      "capacity": 250
+    }
+  ],
+  "location": {
+    "latitude": 58.677207,
+    "longitude": 13.814598
+  }
+},{
+  "charger": "55zjrd",
+  "title": "Sparregatan 7",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.32387,
+    "longitude": 15.09116
+  }
+},{
+  "charger": "58pex",
+  "title": "IONITY Ulricehamn",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 57.8128,
+    "longitude": 13.4183
+  }
+},{
+  "charger": "5npmrn",
+  "title": "Circle K Linköping Tornby",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 58.43111,
+    "longitude": 15.584546
+  }
+},{
+  "charger": "5nyw3k",
+  "title": "CC Rosängens Fordonstvätt",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 180
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.250107,
+    "longitude": 15.197427
+  }
+},{
+  "charger": "5wd6y",
+  "title": "Erikslund, Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 8,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.610415,
+    "longitude": 16.46276
+  }
+},{
+  "charger": "5wm9k",
+  "title": "Preem Brahehus",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.051829,
+    "longitude": 14.507365
+  }
+},{
+  "charger": "5wyp3",
+  "title": "Hallstahammar Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.615011,
+    "longitude": 16.228658
+  }
+},{
+  "charger": "5y68yw",
+  "title": "McDonalds Ödeshög",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.227232,
+    "longitude": 14.6710951
+  }
+},{
+  "charger": "5yggr9",
+  "title": "Norrköping Klinga UFC",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 1,
+      "capacity": 75
+    }
+  ],
+  "location": {
+    "latitude": 58.56846,
+    "longitude": 16.08026
+  }
+},{
+  "charger": "62zdzm",
+  "title": "Möller Bil Örebro CCS",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.298604,
+    "longitude": 15.207224
+  }
+},{
+  "charger": "6352mj",
+  "title": "Holmgrens Bil Jönköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.78328,
+    "longitude": 14.233975
+  }
+},{
+  "charger": "635xyy",
+  "title": "Börjessons Bil i Alingsås",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.929497,
+    "longitude": 12.56303
+  }
+},{
+  "charger": "63m6rq",
+  "title": "Circle K Linköping Rydsvägen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 58.405692,
+    "longitude": 15.56034
+  }
+},{
+  "charger": "68knx",
+  "title": "Lidl Klockaretorpet",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 44
+    }
+  ],
+  "location": {
+    "latitude": 58.581737,
+    "longitude": 16.144091
+  }
+},{
+  "charger": "68kxj",
+  "title": "Arboga Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.426384,
+    "longitude": 15.827981
+  }
+},{
+  "charger": "6k2qdk",
+  "title": "McDonald's Köping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 225
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.518607,
+    "longitude": 15.968695
+  }
+},{
+  "charger": "6qq8e",
+  "title": "IONITY Mantorp",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 58.3724,
+    "longitude": 15.2941
+  }
+},{
+  "charger": "6qwm3",
+  "title": "Burger King Mjölby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.32299,
+    "longitude": 15.08892
+  }
+},{
+  "charger": "6yp57",
+  "title": "IONITY Enköping",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 59.653676,
+    "longitude": 17.083674
+  }
+},{
+  "charger": "7e9736",
+  "title": "Willys (Rotebro Handelsplats)",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 120
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.470548,
+    "longitude": 17.9142
+  }
+},{
+  "charger": "7epwm5",
+  "title": "Knalleland Köpcentrum",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.73299,
+    "longitude": 12.93892
+  }
+},{
+  "charger": "7n3zmw",
+  "title": "Porsche Service Center Linköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 58.4318,
+    "longitude": 15.6618
+  }
+},{
+  "charger": "7pgrg",
+  "title": "Sillekrog Supercharger",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.918156,
+    "longitude": 17.367987
+  }
+},{
+  "charger": "7w6dwk",
+  "title": "McDonalds Norrköping Klinga",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.56871,
+    "longitude": 16.07959
+  }
+},{
+  "charger": "8kzwp",
+  "title": "Circle K Österängen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.785445,
+    "longitude": 14.235369
+  }
+},{
+  "charger": "8n25p3",
+  "title": "Recharge McDonalds Vårgårda",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 3,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.041065,
+    "longitude": 12.800564
+  }
+},{
+  "charger": "8ngk5q",
+  "title": "Marieberg Galleria",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 120
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.216318,
+    "longitude": 15.136228
+  }
+},{
+  "charger": "8nrnz8",
+  "title": "Allego Dinners Arboga",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.426934,
+    "longitude": 15.828759
+  }
+},{
+  "charger": "8nxg9g",
+  "title": "Essinge Brogata Stockholm",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.324939,
+    "longitude": 18.002944
+  }
+},{
+  "charger": "8p8z9y",
+  "title": "Stockholm Stad Birkagatan",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.339498,
+    "longitude": 18.032754
+  }
+},{
+  "charger": "8ppxjm",
+  "title": "OKQ8 Landvetter",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.679825,
+    "longitude": 12.310765
+  }
+},{
+  "charger": "95rz7",
+  "title": "OKQ8 Skärholmen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.272522,
+    "longitude": 17.909685
+  }
+},{
+  "charger": "96j956",
+  "title": "MAX Stenbocksvägen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.773568,
+    "longitude": 17.022961
+  }
+},{
+  "charger": "96jknd",
+  "title": "MAX Takpannegatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.88575,
+    "longitude": 17.66724
+  }
+},{
+  "charger": "96jkx9",
+  "title": "Badhusgatan 12",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.657663,
+    "longitude": 12.115388
+  }
+},{
+  "charger": "998ngz",
+  "title": "OKQ8 Ödeshög Liljekonvaljvägen",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.226866,
+    "longitude": 14.669616
+  }
+},{
+  "charger": "99g9re",
+  "title": "Circle K Västerås Hammarbyrampen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.595324,
+    "longitude": 16.500608
+  }
+},{
+  "charger": "99m7gj",
+  "title": "Borås UFC",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 1,
+      "capacity": 75
+    }
+  ],
+  "location": {
+    "latitude": 57.72092,
+    "longitude": 12.97436
+  }
+},{
+  "charger": "99w3kx",
+  "title": "Preem Borås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.723625,
+    "longitude": 12.987397
+  }
+},{
+  "charger": "9ddxq",
+  "title": "Ulricehamn Supercharger",
+  "total_chargers": [
+    {
+      "count": 20,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.814044,
+    "longitude": 13.418968
+  }
+},{
+  "charger": "9kqwmg",
+  "title": "MAX Hästhovsvägen",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.780294,
+    "longitude": 14.226728
+  }
+},{
+  "charger": "9wqm9",
+  "title": "Toveks Bil Skövde",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 6,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.418668,
+    "longitude": 13.878876
+  }
+},{
+  "charger": "d89pk",
+  "title": "OKQ8 Sillekrog Södergående",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.918051,
+    "longitude": 17.369079
+  }
+},{
+  "charger": "d89zg",
+  "title": "Laxå Tavernagatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.985438,
+    "longitude": 14.618477
+  }
+},{
+  "charger": "d9m9ng",
+  "title": "Burger King Laxå",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.9828,
+    "longitude": 14.6249
+  }
+},{
+  "charger": "d9qxyd",
+  "title": "Rastplats Delsjön",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.677145,
+    "longitude": 12.026917
+  }
+},{
+  "charger": "degky",
+  "title": "OKQ8 Linköping",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.432757,
+    "longitude": 15.582938
+  }
+},{
+  "charger": "dn5y57",
+  "title": "Lidl Mariestad",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.694054,
+    "longitude": 13.817368
+  }
+},{
+  "charger": "dn86nw",
+  "title": "McDonalds Mjölby HPC",
+  "total_chargers": [
+    {
+      "count": 5,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 58.324755,
+    "longitude": 15.092822
+  }
+},{
+  "charger": "dpy8q",
+  "title": "Circle K Eurostop",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.297237,
+    "longitude": 15.204012
+  }
+},{
+  "charger": "drrd5g",
+  "title": "Börjessons Lastbilar AB Alingsås HPC",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 57.936049,
+    "longitude": 12.573084
+  }
+},{
+  "charger": "drrnky",
+  "title": "Lidl Alingsås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.934564,
+    "longitude": 12.546738
+  }
+},{
+  "charger": "e2zx8",
+  "title": "Ödeshög, Rasta",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.233323,
+    "longitude": 14.671045
+  }
+},{
+  "charger": "e8n3z",
+  "title": "IONITY Södertälje",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 59.175417,
+    "longitude": 17.642519
+  }
+},{
+  "charger": "ejdze8",
+  "title": "Receptvägen 11",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 120
+    }
+  ],
+  "location": {
+    "latitude": 57.72288,
+    "longitude": 12.05249
+  }
+},{
+  "charger": "g867y",
+  "title": "Dinners Arboga",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.4263,
+    "longitude": 15.82768
+  }
+},{
+  "charger": "ge3qzn",
+  "title": "Valhallavägen 7",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 120
+    },
+    {
+      "count": 6,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.350714,
+    "longitude": 18.058547
+  }
+},{
+  "charger": "ge83rw",
+  "title": "Holmgrens bil Linköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.43171,
+    "longitude": 15.66231
+  }
+},{
+  "charger": "gegdyw",
+  "title": "Jung Jungatorp 1",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.32747,
+    "longitude": 13.13251
+  }
+},{
+  "charger": "gexywg",
+  "title": "Jönköping Supercharger",
+  "total_chargers": [
+    {
+      "count": 20,
+      "capacity": 250
+    }
+  ],
+  "location": {
+    "latitude": 57.7727,
+    "longitude": 14.199826
+  }
+},{
+  "charger": "geyjg6",
+  "title": "Circle K Floda",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 57.800538,
+    "longitude": 12.366844
+  }
+},{
+  "charger": "gje9rm",
+  "title": "Rastpunkt Laxå",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.98278,
+    "longitude": 14.62629
+  }
+},{
+  "charger": "gjzejn",
+  "title": "Toveks Lastbilar Falköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 100
+    }
+  ],
+  "location": {
+    "latitude": 58.16351,
+    "longitude": 13.568705
+  }
+},{
+  "charger": "j56yj",
+  "title": "Circle K, Stavsjö",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.730361,
+    "longitude": 16.410728
+  }
+},{
+  "charger": "j5p57",
+  "title": "Circle K Tornby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.430799,
+    "longitude": 15.58425
+  }
+},{
+  "charger": "j6r8m",
+  "title": "Enköping Supercharger",
+  "total_chargers": [
+    {
+      "count": 16,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.658974,
+    "longitude": 17.07694
+  }
+},{
+  "charger": "jkpewx",
+  "title": "Boråsvägen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.669439,
+    "longitude": 12.090293
+  }
+},{
+  "charger": "jkyg7r",
+  "title": "Circle K Upplands Väsby",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.513583,
+    "longitude": 17.92018
+  }
+},{
+  "charger": "jq3xpk",
+  "title": "Uppsala UFC",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 1,
+      "capacity": 80
+    }
+  ],
+  "location": {
+    "latitude": 59.84452,
+    "longitude": 17.72904
+  }
+},{
+  "charger": "jqmqry",
+  "title": "Mjölby Time",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.32387,
+    "longitude": 15.09221
+  }
+},{
+  "charger": "jqne9e",
+  "title": "Porsche Center Borås",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 57.6969,
+    "longitude": 12.8238
+  }
+},{
+  "charger": "jqydqp",
+  "title": "McDonalds Linköping Tornby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.43239,
+    "longitude": 15.589722
+  }
+},{
+  "charger": "kez97",
+  "title": "OKQ8 Arboga",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.426171,
+    "longitude": 15.829241
+  }
+},{
+  "charger": "kje5j6",
+  "title": "McDonalds Linköping Valla",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.40655,
+    "longitude": 15.57794
+  }
+},{
+  "charger": "kjed5y",
+  "title": "Preem Nyköping",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.764881,
+    "longitude": 16.989
+  }
+},{
+  "charger": "kpj9jz",
+  "title": "Herrljunga Elektriska",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 58.079923,
+    "longitude": 13.02948
+  }
+},{
+  "charger": "ky526",
+  "title": "Kopparlunden Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 8,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.616629,
+    "longitude": 16.556916
+  }
+},{
+  "charger": "kzeg7k",
+  "title": "Circle K Göteborg Munkebäck",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 57.723701,
+    "longitude": 12.025299
+  }
+},{
+  "charger": "kzggxg",
+  "title": "Toveks Bil Skövde VW",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 100
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.418963,
+    "longitude": 13.878661
+  }
+},{
+  "charger": "m6gge8",
+  "title": "Södertälje UFC",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 1,
+      "capacity": 75
+    }
+  ],
+  "location": {
+    "latitude": 59.18275,
+    "longitude": 17.63065
+  }
+},{
+  "charger": "m6kdek",
+  "title": "MAX Fågelviksvägen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.25334,
+    "longitude": 17.85437
+  }
+},{
+  "charger": "m6krn9",
+  "title": "IONITY Uppsala",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 59.885497,
+    "longitude": 17.667096
+  }
+},{
+  "charger": "m6kz5e",
+  "title": "MAX Aspögatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.41787,
+    "longitude": 15.65675
+  }
+},{
+  "charger": "m6xzww",
+  "title": "McDonalds Mjölby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.32397,
+    "longitude": 15.093717
+  }
+},{
+  "charger": "m7r6j",
+  "title": "Engströms Bil Linköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.427904,
+    "longitude": 15.591516
+  }
+},{
+  "charger": "mm6r6",
+  "title": "OKQ8 Örebro",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.270658,
+    "longitude": 15.174779
+  }
+},{
+  "charger": "mz973d",
+  "title": "Friledningsgatan 6",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.641385,
+    "longitude": 16.562155
+  }
+},{
+  "charger": "mzzeg2",
+  "title": "Recharge Preem Uppsala",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.844586,
+    "longitude": 17.728082
+  }
+},{
+  "charger": "n37g7",
+  "title": "OKQ8 Huskvarna",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.788882,
+    "longitude": 14.26531
+  }
+},{
+  "charger": "n8gez8",
+  "title": "Linköping Supercharger",
+  "total_chargers": [
+    {
+      "count": 12,
+      "capacity": 250
+    }
+  ],
+  "location": {
+    "latitude": 58.435446,
+    "longitude": 15.590899
+  }
+},{
+  "charger": "n8pw2j",
+  "title": "IONITY Gränna",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 58.001509,
+    "longitude": 14.450145
+  }
+},{
+  "charger": "n8rjqn",
+  "title": "Askersunds Kommun",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.879801,
+    "longitude": 14.908318
+  }
+},{
+  "charger": "nerng",
+  "title": "Circle K Borås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.71593,
+    "longitude": 12.91746
+  }
+},{
+  "charger": "newkx",
+  "title": "Brahehus",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.051985,
+    "longitude": 14.507464
+  }
+},{
+  "charger": "nz7rmn",
+  "title": "Circle K Solna Järva Krog",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.380378,
+    "longitude": 18.009779
+  }
+},{
+  "charger": "nzgwdz",
+  "title": "Dialoggatan 12",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 120
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.30119,
+    "longitude": 15.199138
+  }
+},{
+  "charger": "nzxyz7",
+  "title": "Preem Jönköping",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.762417,
+    "longitude": 14.151303
+  }
+},{
+  "charger": "nzyp9g",
+  "title": "Möller Bil Uppsala AUDI",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 200
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.847472,
+    "longitude": 17.716489
+  }
+},{
+  "charger": "pg3me2",
+  "title": "MAX Alingsås",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 120
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.923611,
+    "longitude": 12.530556
+  }
+},{
+  "charger": "pg3pjn",
+  "title": "Toveks Bil Borås Arena",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 100
+    },
+    {
+      "count": 3,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.733915,
+    "longitude": 12.93295
+  }
+},{
+  "charger": "pg6g99",
+  "title": "Toveks Bil Borås Audi",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 5,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.734023,
+    "longitude": 12.932432
+  }
+},{
+  "charger": "pgrzxj",
+  "title": "Munkebäck",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 57.722952,
+    "longitude": 12.024123
+  }
+},{
+  "charger": "pj2qj6",
+  "title": "McDonalds Mörtlösa Linköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.42493,
+    "longitude": 15.66539
+  }
+},{
+  "charger": "pjw6ez",
+  "title": "Porsche Center Jönköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 350
+    }
+  ],
+  "location": {
+    "latitude": 57.7821,
+    "longitude": 14.2296
+  }
+},{
+  "charger": "pr9dx",
+  "title": "Arboga Supercharger",
+  "total_chargers": [
+    {
+      "count": 14,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.426368,
+    "longitude": 15.827079
+  }
+},{
+  "charger": "q5rjez",
+  "title": "OKQ8 Upplands Väsby",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 150
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.513362,
+    "longitude": 17.926285
+  }
+},{
+  "charger": "q5rzr7",
+  "title": "MAX Torpavallsgatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.724279,
+    "longitude": 12.02945
+  }
+},{
+  "charger": "qk27ry",
+  "title": "Will Work, Lerkrogsvägen",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 200
+    }
+  ],
+  "location": {
+    "latitude": 59.289448,
+    "longitude": 18.00881
+  }
+},{
+  "charger": "qk2rq9",
+  "title": "Möller Bil Västerås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.645229,
+    "longitude": 16.569292
+  }
+},{
+  "charger": "qkqq5q",
+  "title": "OKQ8 Linköping Nygårdsinfarten",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.432725,
+    "longitude": 15.582813
+  }
+},{
+  "charger": "qkwmp2",
+  "title": "McDonalds Alingsås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 3,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.925623,
+    "longitude": 12.52933
+  }
+},{
+  "charger": "qky58r",
+  "title": "Circle K Dalbygatan Svampen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.28793,
+    "longitude": 15.223713
+  }
+},{
+  "charger": "qxdnm",
+  "title": "Dinners Enköping",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.658214,
+    "longitude": 17.076827
+  }
+},{
+  "charger": "r3q8w2",
+  "title": "Actic Arena Skövde",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 180
+    },
+    {
+      "count": 6,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.39292,
+    "longitude": 13.840499
+  }
+},{
+  "charger": "r5gkq",
+  "title": "Norrköping Supercharger",
+  "total_chargers": [
+    {
+      "count": 20,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.621893,
+    "longitude": 16.154469
+  }
+},{
+  "charger": "r8382",
+  "title": "Max Mjölby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.32357,
+    "longitude": 15.08979
+  }
+},{
+  "charger": "re8m7k",
+  "title": "McDonalds Vaksalagatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.86809,
+    "longitude": 17.66113
+  }
+},{
+  "charger": "re8mzr",
+  "title": "McDonalds Brändåsen",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.06423,
+    "longitude": 15.00453
+  }
+},{
+  "charger": "re8xp3",
+  "title": "McDonalds Mariestad",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.67815,
+    "longitude": 13.817346
+  }
+},{
+  "charger": "rew5jg",
+  "title": "Stockholm Stad Luxgatan",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.325078,
+    "longitude": 18.00221
+  }
+},{
+  "charger": "rp3jej",
+  "title": "Engströms Lastbilar",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 240
+    }
+  ],
+  "location": {
+    "latitude": 58.422689,
+    "longitude": 15.600846
+  }
+},{
+  "charger": "rpedne",
+  "title": "Boländerna",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.84649,
+    "longitude": 17.68957
+  }
+},{
+  "charger": "w6jz7",
+  "title": "Big Inn Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 4,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.52123,
+    "longitude": 15.97362
+  }
+},{
+  "charger": "wj5ddr",
+  "title": "Circle K Skärholmen Syd",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 300
+    },
+    {
+      "count": 1,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 60
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.267539,
+    "longitude": 17.902916
+  }
+},{
+  "charger": "wj7d6w",
+  "title": "Atteviks Jönköping",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 100
+    },
+    {
+      "count": 2,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.777984,
+    "longitude": 14.187469
+  }
+},{
+  "charger": "wjn2q5",
+  "title": "McDonalds Ulricehamn",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.812206,
+    "longitude": 13.418664
+  }
+},{
+  "charger": "wk9d6",
+  "title": "Circle K Nyköping",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.74962,
+    "longitude": 16.98638
+  }
+},{
+  "charger": "wk9m3",
+  "title": "Circle K Kungens Kurva",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.267903,
+    "longitude": 17.902438
+  }
+},{
+  "charger": "wkwxy",
+  "title": "Circle K Ingelsta",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 58.617743,
+    "longitude": 16.161933
+  }
+},{
+  "charger": "wqqg2z",
+  "title": "STOP 128 DC",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 360
+    },
+    {
+      "count": 3,
+      "capacity": 50
+    },
+    {
+      "count": 3,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.5962,
+    "longitude": 16.4366
+  }
+},{
+  "charger": "wrwx62",
+  "title": "Heden Engelbrektsgatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.7006,
+    "longitude": 11.98109
+  }
+},{
+  "charger": "wwgz3",
+  "title": "Jung Supercharger",
+  "total_chargers": [
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 58.327607,
+    "longitude": 13.132291
+  }
+},{
+  "charger": "wykxw",
+  "title": "Vattenfall - Rejmes",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.297565,
+    "longitude": 15.230012
+  }
+},{
+  "charger": "x532pn",
+  "title": "Circle K Österängen",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 57.785235,
+    "longitude": 14.236057
+  }
+},{
+  "charger": "x577zg",
+  "title": "McD Västerås Kraftlinjegatan",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 225
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 59.636644,
+    "longitude": 16.563988
+  }
+},{
+  "charger": "x5y7kr",
+  "title": "McDonalds Hälla",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 60
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.609059,
+    "longitude": 16.626027
+  }
+},{
+  "charger": "x5ywp2",
+  "title": "McDonalds Landvetter",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 57.679152,
+    "longitude": 12.310768
+  }
+},{
+  "charger": "x8gnp",
+  "title": "Sollentuna Supercharger",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 250
+    },
+    {
+      "count": 6,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 59.496498,
+    "longitude": 17.924318
+  }
+},{
+  "charger": "y29rd9",
+  "title": "Landevigatan 7",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.687422,
+    "longitude": 12.209029
+  }
+},{
+  "charger": "ye2em",
+  "title": "OKQ8 Borås Hultagatan",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.720278,
+    "longitude": 12.974356
+  }
+},{
+  "charger": "yrejpw",
+  "title": "Circle K Knivsta",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 60
+    }
+  ],
+  "location": {
+    "latitude": 59.739954,
+    "longitude": 17.812272
+  }
+},{
+  "charger": "yrekr7",
+  "title": "McDonalds Hagaleden",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 150
+    }
+  ],
+  "location": {
+    "latitude": 57.762307,
+    "longitude": 14.150879
+  }
+},{
+  "charger": "yrk3pn",
+  "title": "Möller Bil Uppsala",
+  "total_chargers": [
+    {
+      "count": 2,
+      "capacity": 200
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.846899,
+    "longitude": 17.713154
+  }
+},{
+  "charger": "yrqkq5",
+  "title": "Lidl Borås",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 57.725832,
+    "longitude": 12.988726
+  }
+},{
+  "charger": "yw5ej",
+  "title": "Circle K Norsholm Bäckeby",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 58.49077,
+    "longitude": 15.95077
+  }
+},{
+  "charger": "z6nz3",
+  "title": "Rocklunda Laddregion Mälardalen",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 8,
+      "capacity": 11
+    }
+  ],
+  "location": {
+    "latitude": 59.626898,
+    "longitude": 16.533008
+  }
+},{
+  "charger": "z83jd",
+  "title": "Preem Rosersberg",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.57637,
+    "longitude": 17.8981
+  }
+},{
+  "charger": "z8k68",
+  "title": "Circle K Järna",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 43
+    }
+  ],
+  "location": {
+    "latitude": 59.08751,
+    "longitude": 17.60241
+  }
+},{
+  "charger": "znj3rm",
+  "title": "Lidl Örebro Rosta",
+  "total_chargers": [
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 44
+    }
+  ],
+  "location": {
+    "latitude": 59.274626,
+    "longitude": 15.191247
+  }
+},{
+  "charger": "znjnq3",
+  "title": "Allego Dinners Mariestad",
+  "total_chargers": [
+    {
+      "count": 4,
+      "capacity": 300
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    },
+    {
+      "count": 2,
+      "capacity": 50
+    }
+  ],
+  "location": {
+    "latitude": 58.677738,
+    "longitude": 13.815225
+  }
+},{
+  "charger": "znq78r",
+  "title": "McDonalds Örebro",
+  "total_chargers": [
+    {
+      "count": 8,
+      "capacity": 150
+    },
+    {
+      "count": 1,
+      "capacity": 60
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 50
+    },
+    {
+      "count": 1,
+      "capacity": 22
+    }
+  ],
+  "location": {
+    "latitude": 59.27255,
+    "longitude": 15.177193
+  }
+}]

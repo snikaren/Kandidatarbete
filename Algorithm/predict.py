@@ -19,21 +19,23 @@ import random
 
 def init_state(name, capacity):
     tot_dict = dict_tot()
-    cap_count = tot_dict[name][capacity].sort()
     # create a pandas series
-    my_series = pd.Series(cap_count)
+    my_series = pd.Series(tot_dict[name][capacity])
+    #print(my_series)
 
     # get the count of occurrences of each unique value
-    value_counts = my_series.value_counts()
+    value_counts = my_series.value_counts(sort=True)
+    
     distribution_df = pd.DataFrame({'Value': value_counts.index, 'Count': value_counts.values})
+    distribution_df['procent'] = distribution_df['Count'] / sum(distribution_df['Count'])
 
     return distribution_df
 
 
 """ returns a dictonary for the charching stations containing the availability over the measured period"""
 def dict_tot():
-    f = open('info.json')
-    f2 = open(r'C:\Users\Henrik\Documents\Chalmers\PythonProg\Charging_Station_availability\avail2023-03-13_16-43-55.json')
+    f = open(r'Algorithm\Info.json')
+    f2 = open(r'Algorithm/avail2023-03-13_16-43-55.json')
     info = json.load(f)
     avail = json.load(f2)
     tot_dict = {}

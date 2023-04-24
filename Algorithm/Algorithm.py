@@ -1,6 +1,6 @@
 from predict import main_pred, init_state, predict_avail, ChargingStationPredictor
 #from predict import *
-from Fordonsdynamik import *
+from Fordonsdynamik import iterate
 import math
 import pandas as pd
 
@@ -23,7 +23,7 @@ def minimize_road_cost(road, TMs, time_cost):
 
 """ Returns the availability of all chargers in the selected span"""
 def get_chargers_avail(idx_start, road, TMs):
-    chargers = iterate(idx_start,road)
+    chargers = iterate(idx_start,len(road))
     # returns: charge_dict[charger] = (soc, total_time)
     char_avail = {}
     " Går igenom alla chargers och dess olika kapaciteter. "
@@ -80,10 +80,12 @@ def main():
             best_road = road
 
 
-
+def testing_func():
+    TMs = main_pred()
 
 
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    testing_func()
