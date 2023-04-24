@@ -10,26 +10,39 @@ tot_dict = dict_tot()
 """ Räknar ut minimala kostnaden för en väg"""
 def minimize_road_cost(road, TMs, time_cost):
     # Simuluera fram tills vi måste ladda 
-    char_avail = get_chargers_avail(1, road, TMs)    # returns dict med charge_id(soc, avail)
-    
-    # Välj den bästa laddaren
-    best_char = choose_charger(char_avail, TMs, time_cost)
-        # Räkna ut när batterivärmning behöver startas
-        # Kör till punkten och ladda
-        # ladda vid denna punkt
-            # Kör hampus program
-        # Få ut ny tid, plats och SOC=80
-        # Appenda cost till total_cost[]
+    current_point = 1
+    total_cost = 0
+    chargers = {1: {}, 2: {}, 3: {}}        # Gissar att denna ska ligga utanför i main?? // Henrik
+    while True:
+        
+        char_avail = get_chargers_avail(current_point, road, TMs)    # returns dict med charge_id(soc, avail)
+        if char_avail == 0:
+            break
+        
+        # Välj den bästa laddaren
+        best_char = choose_charger(char_avail, TMs, time_cost)
+        chargers[road][best_char] = tiden_dit
+            # Räkna ut när batterivärmning behöver startas
+            # Kör till punkten och ladda
+            # ladda vid denna punkt
+                # Kör hampus program
+            # total_cost =+ cost_trip
+            # Få ut ny tid, plats och SOC - NÄR vi nått nästa punkt
+        
     # REPEAT med (plats, TMs, tc)
 
-
-    # return: total_cost resa
+ 
+    return total_cost, 
 
 """ Returns the availability of all chargers{capacity} in the selected span"""
 def get_chargers_avail(idx_start, road, TMs):
-    chargers = iterate(idx_start, road)
+    chargers, done = iterate(idx_start, road)
     # returns: charge_dict[charger] = (soc, total_time)
-
+    
+    # Check if reach endpoint
+    if done:
+        return 0
+    
     char_avail = {}
     " Går igenom alla chargers och dess olika kapaciteter. "
     for charger, value in chargers.items():

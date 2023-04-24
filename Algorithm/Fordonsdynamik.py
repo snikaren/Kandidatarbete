@@ -251,9 +251,12 @@ def iterate(idx_start, route):
 
             soc = 80
             """
+
         elif soc < 20:
-            charge_dict = iterate_charger(charge_dict)
-            return charge_dict
+            charge_dict = iterate_charger(charge_dict) # NOT IMPLEMENTED
+            return charge_dict, True
+        
+    
 
         """ Hämtar info för Plottar """
         indices.append(index)
@@ -263,7 +266,7 @@ def iterate(idx_start, route):
         u_o_c_list.append(u_o_c(soc))
         battery_temperature_list.append(battery_temperature)
         total_distance_list.append(total_distance)
-
+    
     print(charge_dict)
     print(battery_temperature_list)
 
@@ -330,7 +333,7 @@ def iterate(idx_start, route):
 
     plt.show()
 
-    return
+    return charge_dict, False
 
 
 ######################
