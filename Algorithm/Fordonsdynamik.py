@@ -188,6 +188,7 @@ def internal_resistance_battery(battery_temperature):
     return (90.196*m.e**(-0.08*(battery_temperature-274)) + 25.166)/1000
 
 
+
 def iterate(idx_start, route):
 
     # dataframe
@@ -230,12 +231,12 @@ def iterate(idx_start, route):
 
             # Grabs chargers associated with data points
             chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
-
+            
             # If there is a charger close, save it
             for charger in chargers:
                 if charger != "0":
                     charge_dict[charger] = (soc, total_time)
-
+            """
             #  Adds second identical data point when charging
             indices.append(index)
             current_energy_consumption_list.append(total_energy(index))
@@ -249,11 +250,12 @@ def iterate(idx_start, route):
             print(soc)
 
             soc = 80
-
+            """
         elif soc < 20:
+            charge_dict = iterate_charger(charge_dict)
             return charge_dict
 
-            """ Hämtar info för Plottar """
+        """ Hämtar info för Plottar """
         indices.append(index)
         current_energy_consumption_list.append(total_energy(index))
         total_energy_consumption_list.append(total_energy_consumption)

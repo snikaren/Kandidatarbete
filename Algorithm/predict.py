@@ -17,8 +17,7 @@ import random
     procentual availabillity"""
 """ Osäker på om denna behövs, men sparar sålänge """
 
-def init_state(name, capacity):
-    tot_dict = dict_tot()
+def init_state(name, capacity, tot_dict):
     # create a pandas series
     my_series = pd.Series(tot_dict[name][capacity])
     #print(my_series)
