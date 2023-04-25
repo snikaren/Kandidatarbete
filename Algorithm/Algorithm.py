@@ -1,6 +1,7 @@
 from predict import main_pred, init_state, predict_avail, ChargingStationPredictor, dict_tot
 #from predict import *
 from Fordonsdynamik import iterate
+from cost import *
 import math
 import pandas as pd
 
@@ -32,7 +33,7 @@ def minimize_road_cost(road, TMs, time_cost):
     # REPEAT med (plats, TMs, tc)
 
  
-    return total_cost, 
+    return total_cost, chargers #, timestops, timecharge?, mer?
 
 """ Returns the availability of all chargers{capacity} in the selected span"""
 def get_chargers_avail(idx_start, road, TMs):
