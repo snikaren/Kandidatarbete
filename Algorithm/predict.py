@@ -5,18 +5,7 @@ import math
 import json
 import random
 
-# Code for predicting the availability of charging stations
-# Ideer: 
-#   Bayesian predition (Naive?)
-#   Markov chain
-#   Classification through prediction 
-
-""" Går igenom avail_datan för varje laddare, och returnerar listor med 
-    Total chargers
-    Average availability
-    procentual availabillity"""
-""" Osäker på om denna behövs, men sparar sålänge """
-
+""" Creates the initial state for a charging station"""
 def init_state(name, capacity, tot_dict):
     # create a pandas series
     my_series = pd.Series(tot_dict[name][capacity])
@@ -41,9 +30,7 @@ def dict_tot():
     # Går igenom alla chargers i info
     try:
         for charger in info:
-            charger_name = charger['charger']       # Charger är 6 siffriga koden
-            # Kollar att charge_id finns in avail
-            # Om det finns, lägger till värdet i dict
+            charger_name = charger['charger']
             tot_dict[charger_name] = {}
             capacitites = [i["capacity"] for i in charger["total_chargers"]]
             for idx, cap in enumerate(capacitites):                     
@@ -61,13 +48,14 @@ def dict_tot():
         
     return tot_dict
 
-"""" Returns the tranition matrix, for a given charging station """
+""" Returns the tranition matrix, for a given charging station """
 def tm_one_charger(charger_dict):
     # https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
     trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next'),
                         pd.Series(charger_dict[:-1],name='Current'),normalize=1)
     return trans
 
+""" Func that checks if a matrix has a recursive point, and changes that column to have a 10% chance to reference another value"""
 def remove_recursive_points(t_dict):
     for charger, caps in t_dict.items():
         for cap, t in caps.items():
@@ -89,6 +77,7 @@ def main_pred():
             d[charger][cap] = tm_one_charger(dt[charger][cap])
     return remove_recursive_points(d)
 
+""" A Class that runs the availability probabillity for a given station and time intervall"""
 class ChargingStationPredictor:
     
     def __init__(self, states, transition_matrix, initial_state_distribution):
@@ -104,7 +93,8 @@ class ChargingStationPredictor:
             current_state_distribution = next_state_distribution
             
         return current_state_distribution
-    
+
+# Gamal testfunc för att testa Class
 def test_pred():
     states = [0, 1, 2, 3, 4]
     transition_matrix = np.array([[0.3, 0.4, 0.2, 0.1, 0], 
@@ -119,6 +109,7 @@ def test_pred():
     print(predictor.predict(steps=1))
     print(predictor.predict(steps=2))
 
+""" Func that runs the class CSP the correct amount of timesteps"""
 def predict_avail(charger, timesteps, initial_state, trans_matrix):
     predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
     predictor.predict(steps=timesteps)
