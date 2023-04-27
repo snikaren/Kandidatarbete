@@ -182,7 +182,7 @@ def internal_resistance_battery(battery_temperature):
     return (90.196*m.e**(-0.08*(battery_temperature-274)) + 25.166)/1000
 
 
-def iterate_charger(chargers, temp, s_o_c, start_idx):
+def iterate_charger(chargers: dict, temp: int, s_o_c: int, start_idx: int):
 
     #For every charger
         # Get the start time

@@ -216,9 +216,11 @@ def iterate(idx_start: int, route: int):
 
         # If Soc is less than 20 procent, look for chargers
         if 20 < soc < 40:
-
-            # Grabs chargers associated with data points
-            chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
+            try:
+                # Grabs chargers associated with data points
+                chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
+            except:
+                print(index, "Här är det feeeeel")
             
             # If there is a charger close, save it
             for charger in chargers:

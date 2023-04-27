@@ -116,6 +116,8 @@ def predict_avail(charger, timesteps, initial_state, trans_matrix):
     predictor.predict(steps=timesteps)
     
 if __name__ == '__main__':
-    print(dict_tot())
+    test_pred()
+
+    #print(dict_tot())
     #print("22mr3", dict_tot()['yrekr7'])
     

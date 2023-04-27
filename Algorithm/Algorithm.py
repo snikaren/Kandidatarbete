@@ -23,7 +23,7 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float):
             break
         
         # Välj den bästa laddaren       # RETURNERAR JUST NU EN LISTA MED KOSTNADEN???
-        best_char = choose_charger(char_avail, TMs, time_cost)
+        best_char = choose_charger(char_avail, time_cost)
 
         # calculation on the choosen charger
         # chargers[best_char] = tiden_dit       ## fattar inte rikitigt vad som vill fås ut här???
@@ -33,7 +33,7 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float):
                 # Kör hampus program
             # total_cost =+ cost_trip
             # Få ut ny tid, plats och SOC - NÄR vi nått nästa punkt
-        
+        current_point += 1
     # REPEAT med (plats, TMs, tc)
 
  
@@ -50,43 +50,37 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict):
         print("done")
         return 0
     
-    print("not done")
     char_avail = {}
     " Går igenom alla chargers och dess olika kapaciteter. "
     for charger, value in chargers.items():
-        print(charger)
         for cap in TMs[charger]:
-            print(cap)
-            # Set up
-
-            states, initial_state = init_state(charger, cap, tot_dict) 
+            # set up for pred
+            state, initial_state = init_state(charger, cap, tot_dict) 
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value[1]/60/30)
-            predictor = ChargingStationPredictor(states, trans_matrix, initial_state)
+            predictor = ChargingStationPredictor(state, trans_matrix, initial_state)
 
             # Runs the predictor the correct amount of steps
-            # (soc, avail)
+            # (soc, state, avail)
             if charger in char_avail:
-                char_avail[charger][cap] = (value[0], predictor.predict(steps=time_steps))
+                char_avail[charger][cap] = (value[0], predictor.predict(steps=time_steps), state)
             else:
-                char_avail[charger] = {cap: (value[0], predictor.predict(steps=time_steps))}
+                char_avail[charger] = {cap: (value[0], predictor.predict(steps=time_steps), state)}
 
-
-
-    
-    print("avail end")
     return char_avail
 
-
-def choose_charger(avail_dict, tc):
+def choose_charger(avail_dict: dict, tc: float) -> tuple: 
     """ takes a dict of chargers, and calculates the cost of charging at each.
-        returns the (best/list of value) ### VILKEN VILL VI HA????"""
-    total_cost_list = []
+        returns a tuple with (id, cost)"""
+    best_charger = 0
+    best_charger_cost = 0
     for charger in avail_dict:   # {charger_name: {50: (soc_50, state_predict[1xn]_50), 45: (soc_45, state_predict[1xn]_45)}}
-        for cap, value in charger:
+        for cap, value in avail_dict[charger].items():
             soc = value[0]
             avail = value[1]
+            state = value[2]
 
+            # TODO funktionerna price_from_capa, el_consum, time_charge
             ## Kolla kostnad         kr
             cost_el = Func_price_from_capa(cap)     # Löser sen /jakob_henrik
             tot_el = Func_el_consum(soc, cap)      # Hampus gör idag 24/4      # Kan flyttas till utanför for-loop
@@ -97,19 +91,20 @@ def choose_charger(avail_dict, tc):
             tot_cost_time = tc * time_charge
         
             ## Kolla avail           true/false      
-            average_avail, tot_avail = get_avail_value(avail)
-            avail_antal = average_avail
-            avail_procent = average_avail/tot_avail
+            avail_procent, avail_num = get_avail_value(avail, state)       # (0-1), (numerical)
             # Räkna ut en faktor som används för att väga procent mot antal
-            faktor = 5          
-            avail_factor = avail_procent*faktor + avail_antal
+            faktor = 4
+            avail_factor = avail_procent*faktor + avail_num
             total_cost = (tot_cost_el + tot_cost_time) / avail_factor
 
-            total_cost_list.append(total_cost)
+            if best_charger == 0:
+                best_charger = charger
+                best_charger_cost = total_cost
+            elif total_cost < best_charger_cost:
+                best_charger = charger
+                best_charger_cost = total_cost
 
-    # Ska vi returnera listan, eller bara bästa värdet?
-    # Vi är ju egenltigen bara intresserade av värdet, samt vilket laddare
-    return total_cost_list
+    return (best_charger, best_charger_cost)
         
 
 def main():
@@ -117,7 +112,7 @@ def main():
     *Ger även alla laddstationer man stannar vid""" 
     TMs = main_pred()
     roads = [1, 2, 3]
-    chargersList = [{}, {}, {}]        # Gissar att denna ska ligga utanför i main?? // Henrik
+    chargersList = [{}, {}, {}]
     time_cost = 10  #ger bara ett nummer för tester
     min_cost, chargersList[0] = minimize_road_cost(roads[0], chargersList[0], TMs, time_cost)       # returns the cost of choosing that road
     best_road_idx = 0
@@ -130,8 +125,6 @@ def main():
 
 def testing_func():
     TMs = main_pred()
-
-
 
 
 if __name__ == "__main__":
