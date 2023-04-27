@@ -5,18 +5,19 @@ from cost import *
 import math
 import pandas as pd
 
-df = pd.read_csv(r'Algorithm\excel/chargers.csv')
+df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
 tot_dict = dict_tot()
 " global variabel dict_tot()"
 
-def minimize_road_cost(road, chargers, TMs, time_cost):
-    """ Räknar ut minimala kostnaden för en väg"""
-    # Simuluera fram tills vi måste ladda 
+def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float):
+    """ Räknar ut minimala kostnaden för en väg.
+        returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
     total_cost = 0
     while True:
         
+        # Simuluera fram tills vi måste ladda 
         char_avail = get_chargers_avail(current_point, road, TMs)    # returns dict med charge_id(soc, avail)
         if char_avail == 0:
             break
@@ -38,31 +39,39 @@ def minimize_road_cost(road, chargers, TMs, time_cost):
  
     return total_cost, chargers #, timestops, timecharge?, mer?
 
-def get_chargers_avail(idx_start, road, TMs):
+def get_chargers_avail(idx_start: int, road: int, TMs: dict):
     """ Returns the availability of all chargers{capacity} in the selected span"""
     chargers, done = iterate(idx_start, road)
     # returns: charge_dict[charger] = (soc, total_time)
     
     # Check if reach endpoint
     if done:
-        pass
-        #return 0
+        #pass
+        print("done")
+        return 0
     
-    print(chargers)
-
+    print("not done")
     char_avail = {}
     " Går igenom alla chargers och dess olika kapaciteter. "
     for charger, value in chargers.items():
+        print(charger)
         for cap in TMs[charger]:
+            print(cap)
             # Set up
-            initial_state = init_state(charger, cap, tot_dict) 
+
+            states, initial_state = init_state(charger, cap, tot_dict) 
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value[1]/60/30)
-            predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
+            predictor = ChargingStationPredictor(states, trans_matrix, initial_state)
 
             # Runs the predictor the correct amount of steps
             # (soc, avail)
-            char_avail[charger][cap] = (charger[0], predictor.predict(steps=time_steps))
+            if charger in char_avail:
+                char_avail[charger][cap] = (value[0], predictor.predict(steps=time_steps))
+            else:
+                char_avail[charger] = {cap: (value[0], predictor.predict(steps=time_steps))}
+
+
 
     
     print("avail end")
@@ -106,7 +115,6 @@ def choose_charger(avail_dict, tc):
 def main():
     """ Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. 
     *Ger även alla laddstationer man stannar vid""" 
-    # skapa en funk som sparar cvs som roads[]
     TMs = main_pred()
     roads = [1, 2, 3]
     chargersList = [{}, {}, {}]        # Gissar att denna ska ligga utanför i main?? // Henrik

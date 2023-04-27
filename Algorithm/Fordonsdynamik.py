@@ -188,7 +188,7 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start, route):
+def iterate(idx_start: int, route: int):
 
     # dataframe
     init_df(route)
@@ -227,10 +227,12 @@ def iterate(idx_start, route):
 
         elif soc < 20:
             # Bort komenterat för testning
-            # charge_dict = iterate_charger(charge_dict)
-            return charge_dict, True
+            # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
+            # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
+            soc = 80
+            return charge_dict, False
 
-    return charge_dict, False
+    return charge_dict, True
 
 
 ######################
