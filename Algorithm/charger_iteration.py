@@ -1,7 +1,21 @@
+from Konstanter import *
+import numpy as np
+import pandas as pd
+import time
+
+
+charger_speed_limit = 50
+
+#  Läser in csv-filen # Dict med hastighet som key och acc_tid som value
+data = np.loadtxt(r'Algorithm\excel\AccelerationsTider.csv', delimiter=";", skiprows=1)
+acc_dict = dict()
+for i in range(len(data)):
+    acc_dict[data[i, 0]] = data[i, 1]
+
 # Resulting acceleration of car
-def acc_tot(idx):
-    velo_current = float(Current_pd(speed, idx))
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx))))
+def acc_tot(prev_idx):
+    velo_current = charger_speed_limit
+    velo_previous = float(Current_pd(speed, prev_idx))
 
     #  To handle the case where the next velocity is the same as the previous
     if velo_current == velo_previous:
@@ -12,9 +26,9 @@ def acc_tot(idx):
         return abs(velo_current - velo_previous)/(3.6*(acc_dict[velo_current] - acc_dict[velo_previous]))
 
 
-def force_tot(idx):
-    velo_current = float(Current_pd(speed, idx))
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx))))
+def force_tot(prev_idx):
+    velo_current = charger_speed_limit
+    velo_previous = float(Current_pd(speed, prev_idx))
 
     #  To handle the case where the next velocity is the same as the previous
     if velo_current == velo_previous:
@@ -26,9 +40,9 @@ def force_tot(idx):
 
 
 # Dragforce
-def force_air(idx, mode):
-    velo_current = float(Current_pd(speed, idx)) / 3.6
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx)))) / 3.6
+def force_air(prev_idx, mode):
+    velo_current = charger_speed_limit / 3.6
+    velo_previous = float(Current_pd(speed, prev_idx)) / 3.6
     if mode == 0:
         #  Mean of final velocity and starting velocity
         return den_air * cd * area_front * ((velo_current + velo_previous) / 2) ** 2 / 2
@@ -37,13 +51,13 @@ def force_air(idx, mode):
         return den_air * cd * area_front * velo_current ** 2 / 2
 
 
-def force_elevation(idx):
-    elev_current = float(Current_pd(grads, idx))
+def force_elevation():
+    elev_current = float(Current_pd(grads, idx)) #TODO: Get chqarger elevation
     return m_bil * g * (np.sin(elev_current) + c_r * np.cos(elev_current))
 
 
 def force_traction_acc(idx):
-    return force_tot(idx) + force_air(idx, 0) + force_elevation(idx)
+    return force_tot(idx) + force_air(idx, 0) + force_elevation()
 
 
 def force_traction_const(idx):
@@ -52,10 +66,10 @@ def force_traction_const(idx):
 
 ## Beräkningar av effekt och arbete från Acc ##
 # Beräknar tiden det tar att accelerera mellan två olika hastigheter
-def time_acc(idx):
+def time_acc(prev_idx):
     #  /3.6 omvandlar till m/s
-    velo_current = float(Current_pd(speed, idx))/3.6
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx))))/3.6
+    velo_current = charger_speed_limit / 3.6
+    velo_previous = float(Current_pd(speed, prev_idx))/3.6
 
     #  To handle the case where the next velocity is the same as the previous
     if velo_current == velo_previous:
@@ -66,28 +80,28 @@ def time_acc(idx):
 
 
 # Avståndet det tar att accelerera till den nya hastigheten
-def dist_acc(idx):
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx)))) / 3.6
+def dist_acc(prev_idx):
+    velo_previous = float(Current_pd(speed, prev_idx)) / 3.6
     # s = v0*t + (a*t^2)/2
     return velo_previous * time_acc(idx) + acc_tot(idx) * (time_acc(idx)**2) / 2
 
 
 def time_constant_velo(idx):
-    velo_current = float(Current_pd(speed, idx)) / 3.6
+    velo_current = charger_speed_limit / 3.6
 
     #  s = v0*t
     #  *1000 för att omvandla till meter
-    return ((float(dists[idx])*1000) - float(dist_acc(idx)))/velo_current
+    return ((float(dist_to_point_after_charger[idx])*1000) - float(dist_acc(idx)))/velo_current
 
 
 def dist_const_velo(idx):
     #  Totala sträckan till nästa punkt minus sträckan under acceleration
-    return (float(dists[idx])*1000) - float(dist_acc(idx))
+    return (float(dist_to_point_after_charger[idx])*1000) - float(dist_acc(idx))
 
 #  Energy consumption during constant velocity
-def energy_acc(idx):
-    velo_current = float(Current_pd(speed, idx)) / 3.6
-    velo_previous = float(Current_pd(speed, indx(prev_point(idx)))) / 3.6
+def energy_acc(prev_idx):
+    velo_current = charger_speed_limit / 3.6
+    velo_previous = float(Current_pd(speed, prev_idx)) / 3.6
 
     #  Regenerative breaking
     if force_tot(idx) >= 0:
@@ -149,23 +163,32 @@ def internal_resistance_battery(battery_temperature):
     return (90.196*m.e**(-0.08*(battery_temperature-274)) + 25.166)/1000
 
 
-def iterate_charger(chargers):
+def iterate_charger(chargers, start_idx):
+
+    #For every charger
+        # Get the start time
+        # Set the initial values (temp, soc, etc)
+        # Simulate from the start point to the charger
+        # Get the end time
+        # Calculate the total time
+        # Calculate the total energy consumption
+        # Calculate the total distance
+    # Return modified chargers dict
 
     # Starting values
-    battery_temperature = 274  # Starting with ambient temp of air
+    battery_temperature = 274  # This should be the current temperature of the battery
     total_energy_consumption = 0
     total_distance = 0
     total_time = 0
-    soc = 100 * max_battery/Battery_joules  # Starting with soc=80
+    soc = 100 * max_battery/Battery_joules  # This should be the current state of charge of the battery
 
     start_time = time.time()
     #  Iterating over road points
     for charger in chargers:
-        for index in [0,1]:
-            # For every iteration calculate and add each import
-            temp_total_energy_consumption = total_energy_consumption + total_energy(index)
-            soc -= s_o_c_change(index, soc)
-            total_distance += (dist_const_velo(index) + dist_acc(index))
-            total_time += (time_acc(index) + time_constant_velo(index))         # [s]
-            battery_temperature += battery_temperature_change(index, soc, battery_temperature)
+        # For every iteration calculate and add each import
+        temp_total_energy_consumption = total_energy_consumption + total_energy(start_idx)
+        soc -= s_o_c_change(start_idx, soc)
+        total_distance += (dist_const_velo(start_idx) + dist_acc(start_idx))
+        total_time += (time_acc(start_idx) + time_constant_velo(start_idx))         # [s]
+        battery_temperature += battery_temperature_change(start_idx, soc, battery_temperature)
     return

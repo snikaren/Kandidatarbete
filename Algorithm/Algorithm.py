@@ -5,24 +5,27 @@ from cost import *
 import math
 import pandas as pd
 
-df = pd.read_csv('chargers.csv')
-tot_dict = dict_tot()
+df = pd.read_csv(r'Algorithm\excel/chargers.csv')
 
-""" Räknar ut minimala kostnaden för en väg"""
-def minimize_road_cost(road, TMs, time_cost):
+tot_dict = dict_tot()
+" global variabel dict_tot()"
+
+def minimize_road_cost(road, chargers, TMs, time_cost):
+    """ Räknar ut minimala kostnaden för en väg"""
     # Simuluera fram tills vi måste ladda 
     current_point = 1
     total_cost = 0
-    chargers = {1: {}, 2: {}, 3: {}}        # Gissar att denna ska ligga utanför i main?? // Henrik
     while True:
         
         char_avail = get_chargers_avail(current_point, road, TMs)    # returns dict med charge_id(soc, avail)
         if char_avail == 0:
             break
         
-        # Välj den bästa laddaren
+        # Välj den bästa laddaren       # RETURNERAR JUST NU EN LISTA MED KOSTNADEN???
         best_char = choose_charger(char_avail, TMs, time_cost)
-        chargers[road][best_char] = tiden_dit
+
+        # calculation on the choosen charger
+        # chargers[best_char] = tiden_dit       ## fattar inte rikitigt vad som vill fås ut här???
             # Räkna ut när batterivärmning behöver startas
             # Kör till punkten och ladda
             # ladda vid denna punkt
@@ -35,15 +38,18 @@ def minimize_road_cost(road, TMs, time_cost):
  
     return total_cost, chargers #, timestops, timecharge?, mer?
 
-""" Returns the availability of all chargers{capacity} in the selected span"""
 def get_chargers_avail(idx_start, road, TMs):
+    """ Returns the availability of all chargers{capacity} in the selected span"""
     chargers, done = iterate(idx_start, road)
     # returns: charge_dict[charger] = (soc, total_time)
     
     # Check if reach endpoint
     if done:
-        return 0
+        pass
+        #return 0
     
+    print(chargers)
+
     char_avail = {}
     " Går igenom alla chargers och dess olika kapaciteter. "
     for charger, value in chargers.items():
@@ -58,11 +64,14 @@ def get_chargers_avail(idx_start, road, TMs):
             # (soc, avail)
             char_avail[charger][cap] = (charger[0], predictor.predict(steps=time_steps))
 
+    
+    print("avail end")
     return char_avail
 
 
-
 def choose_charger(avail_dict, tc):
+    """ takes a dict of chargers, and calculates the cost of charging at each.
+        returns the (best/list of value) ### VILKEN VILL VI HA????"""
     total_cost_list = []
     for charger in avail_dict:   # {charger_name: {50: (soc_50, state_predict[1xn]_50), 45: (soc_45, state_predict[1xn]_45)}}
         for cap, value in charger:
@@ -75,11 +84,11 @@ def choose_charger(avail_dict, tc):
             tot_cost_el = cost_el * tot_el 
         
             ## kolla tid att ladda   tid->kr
-            time_charge = Func_time_charge              # Lös från FD
+            time_charge = Func_time_charge(soc, cap)           # Lös från FD
             tot_cost_time = tc * time_charge
         
             ## Kolla avail           true/false      
-            average_avail, tot_avail = avail(nånting)
+            average_avail, tot_avail = get_avail_value(avail)
             avail_antal = average_avail
             avail_procent = average_avail/tot_avail
             # Räkna ut en faktor som används för att väga procent mot antal
@@ -89,21 +98,26 @@ def choose_charger(avail_dict, tc):
 
             total_cost_list.append(total_cost)
 
+    # Ska vi returnera listan, eller bara bästa värdet?
+    # Vi är ju egenltigen bara intresserade av värdet, samt vilket laddare
     return total_cost_list
         
 
-""" Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. *Ger även alla laddstationer man stannar vid"""
 def main():
+    """ Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. 
+    *Ger även alla laddstationer man stannar vid""" 
     # skapa en funk som sparar cvs som roads[]
     TMs = main_pred()
     roads = [1, 2, 3]
-    min_cost =  minimize_road_cost(roads[0], TMs)       # returns the cost of choosing that road
-    best_road = roads[0]
-    for road in roads[1:]:
-        tot_cost = minimize_road_cost(road)
+    chargersList = [{}, {}, {}]        # Gissar att denna ska ligga utanför i main?? // Henrik
+    time_cost = 10  #ger bara ett nummer för tester
+    min_cost, chargersList[0] = minimize_road_cost(roads[0], chargersList[0], TMs, time_cost)       # returns the cost of choosing that road
+    best_road_idx = 0
+    for i in range(1, len(roads)):
+        tot_cost, chargersList[i] = minimize_road_cost(roads[i], chargersList[i], TMs, time_cost)
         if tot_cost < min_cost:
             min_cost = tot_cost
-            best_road = road
+            best_road_idx = i
 
 
 def testing_func():
@@ -113,5 +127,5 @@ def testing_func():
 
 
 if __name__ == "__main__":
-    #main()
-    testing_func()
+    main()
+    #testing_func()
