@@ -12,6 +12,7 @@ grads, speed, dists = 0,0,0
 df_charge = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
 def init_df(route):
+    """ grabs the correct cvs-file and make it the DataFrame of the iteration"""
     global df, grads, speed, dists
     if route == 1:
         df = pd.read_csv(r'Algorithm\excel\rutt_1.csv')
@@ -188,7 +189,9 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start: int, route: int):
+def iterate(idx_start: int, route: int) -> tuple(dict, bool):
+    """ Func that itaretes through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
+    which charging-stations are reachable while not running out of energy (soc<20)"""
 
     # dataframe
     init_df(route)
@@ -208,13 +211,12 @@ def iterate(idx_start: int, route: int):
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc)
         total_distance += (dist_const_velo(index) + dist_acc(index))
-        total_time += (time_acc(index) + time_constant_velo(index))         # [s]
+        total_time += (time_acc(index) + time_constant_velo(index))
         battery_temperature += battery_temperature_change(index, soc, battery_temperature)
-        #print(battery_temperature_change(index, soc, battery_temperature))
 
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
-        # If Soc is less than 20 procent, look for chargers
+        # If Soc is less than 40 procent, look for chargers
         if 20 < soc < 40:
             try:
                 # Grabs chargers associated with data points
@@ -231,7 +233,7 @@ def iterate(idx_start: int, route: int):
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
-            soc = 80
+            soc = 80    # nyladdat batteri
             return charge_dict, False
 
     return charge_dict, True

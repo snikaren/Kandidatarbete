@@ -5,7 +5,7 @@ import math
 import json
 import random
 
-def init_state(name: str, capacity: int, tot_dict: dict):
+def init_state(name: str, capacity: int, tot_dict: dict) -> tuple(list, list):
     """ Creates the initial state for a charging station"""
     # create a pandas series
     my_series = pd.Series(tot_dict[name][capacity])
@@ -20,7 +20,7 @@ def init_state(name: str, capacity: int, tot_dict: dict):
 
 
 
-def dict_tot():
+def dict_tot() -> dict:
     """ returns a dictonary for the charching stations containing the availability over the measured period"""
     f = open(r'Algorithm\Info.json')
     f2 = open(r'Algorithm/avail2023-03-13_16-43-55.json')
@@ -47,14 +47,14 @@ def dict_tot():
         
     return tot_dict
 
-    # https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
-def tm_one_charger(charger_dict: dict):
+# https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
+def tm_one_charger(charger_dict: dict): # -> DataFrame
     """ Returns the tranition matrix, for a given charging station """
     trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next'),
                         pd.Series(charger_dict[:-1],name='Current'),normalize=1)
     return trans
 
-def remove_recursive_points(t_dict: dict):
+def remove_recursive_points(t_dict: dict) -> dict:
     """ Func that checks if a matrix has a recursive point, 
     and changes that column to have a 10% chance to reference another value"""
     for charger, caps in t_dict.items():
@@ -68,7 +68,9 @@ def remove_recursive_points(t_dict: dict):
                             t_dict[charger][cap].at[idx_row, col] = 0.9
     return t_dict
 
-def main_pred():
+def main_pred() -> dict:
+    """ a func that returns the dict of all availability of all chargers in info, 
+    with recuring points removed"""
     dt = dict_tot()
     d = {}
     for charger in dt:
@@ -77,15 +79,16 @@ def main_pred():
             d[charger][cap] = tm_one_charger(dt[charger][cap])
     return remove_recursive_points(d)
 
-""" A Class that runs the availability probabillity for a given station and time intervall"""
 class ChargingStationPredictor:
+    """ A Class that runs the availability probabillity for a given station and time intervall"""
     
     def __init__(self, states: list, transition_matrix, initial_state_distribution: list):
         self.states = states
         self.transition_matrix = transition_matrix
         self.initial_state_distribution = initial_state_distribution
         
-    def predict(self, steps=1):
+    def predict(self, steps=1) -> list:
+        """ a functiion that runs the state_dist 'steps' number of times to calculate the future distribution"""
         current_state_distribution = self.initial_state_distribution
         
         for i in range(steps):
@@ -94,8 +97,8 @@ class ChargingStationPredictor:
             
         return current_state_distribution
 
-# Gamal testfunc för att testa Class
 def test_pred():
+    " Test function for showing how the class ChargingStationPredictor works. states are not needed"
     states = [0, 1, 2, 3, 4]
     transition_matrix = np.array([[0.3, 0.4, 0.2, 0.1, 0], 
                                 [0.1, 0.3, 0.4, 0.2, 0], 
@@ -110,8 +113,9 @@ def test_pred():
     print(predictor.predict(steps=1))
     print(predictor.predict(steps=2))
 
-""" Func that runs the class CSP the correct amount of timesteps"""
+
 def predict_avail(charger, timesteps, initial_state, trans_matrix):
+    """ Func that runs the class CSP the correct amount of timesteps"""
     predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
     predictor.predict(steps=timesteps)
     

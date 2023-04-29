@@ -10,7 +10,7 @@ df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 tot_dict = dict_tot()
 " global variabel dict_tot()"
 
-def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float):
+def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -> tuple(int, dict):
     """ Räknar ut minimala kostnaden för en väg.
         returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
@@ -39,7 +39,7 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float):
  
     return total_cost, chargers #, timestops, timecharge?, mer?
 
-def get_chargers_avail(idx_start: int, road: int, TMs: dict):
+def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
     chargers, done = iterate(idx_start, road)
     # returns: charge_dict[charger] = (soc, total_time)
@@ -69,7 +69,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict):
 
     return char_avail
 
-def choose_charger(avail_dict: dict, tc: float) -> tuple: 
+def choose_charger(avail_dict: dict, tc: float) -> tuple(str, int): 
     """ takes a dict of chargers, and calculates the cost of charging at each.
         returns a tuple with (id, cost)"""
     best_charger = 0
