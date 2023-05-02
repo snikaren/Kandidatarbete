@@ -198,20 +198,30 @@ def iterate_charger(chargers: dict, temp: int, s_o_c: int, start_idx: int):
 
     #  Iterating over road points
     for charger in chargers:
+        """
         battery_temperature = temp
         total_energy_consumption = 0
         total_distance = 0
         total_time = 0
         soc = s_o_c
+        """
+        soc = charger[0]
+        total_time = charger[1]
+        start_idx = charger[2]
+        total_energy_consumption = charger[3]
+        total_distance = charger[4]
+        battery_temperature = charger[5]
 
         charger_idx = df_charge['name'].index(charger)
-
-        # For every iteration calculate and add each import
-        temp_total_energy_consumption = total_energy_consumption + total_energy(start_idx, charger_idx)
-        soc -= s_o_c_change(start_idx, charger_idx, soc)
-        total_distance += (dist_const_velo(start_idx, charger_idx) + dist_acc(start_idx))
-        total_time += (time_acc(start_idx) + time_constant_velo(start_idx, charger_idx))         # [s]
-        battery_temperature += battery_temperature_change(start_idx, charger_idx, soc, battery_temperature)
+        
+        for _ in range(2):
+            # For every iteration calculate and add each import
+            temp_total_energy_consumption = total_energy_consumption + total_energy(start_idx, charger_idx)
+            soc -= s_o_c_change(start_idx, charger_idx, soc)
+            total_distance += (dist_const_velo(start_idx, charger_idx) + dist_acc(start_idx))
+            total_time += (time_acc(start_idx) + time_constant_velo(start_idx, charger_idx))         # [s]
+            battery_temperature += battery_temperature_change(start_idx, charger_idx, soc, battery_temperature)
+        
 
         charge_dict[charger] = \
         {
@@ -232,3 +242,7 @@ def iterate_charger(chargers: dict, temp: int, s_o_c: int, start_idx: int):
 # Tar ut värdet för en column, givet en punkt
 def Current_pd(pds, idx):
     return pds.iloc[idx]
+
+# Hittar tidigare punkt från nuvarnde idx
+def prev_point(idx):
+    return df.iloc[idx]['previous']

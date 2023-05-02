@@ -5,7 +5,7 @@ import math
 import json
 import random
 
-def init_state(name: str, capacity: int, tot_dict: dict) -> tuple(list, list):
+def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
     """ Creates the initial state for a charging station"""
     # create a pandas series
     my_series = pd.Series(tot_dict[name][capacity])
@@ -15,8 +15,9 @@ def init_state(name: str, capacity: int, tot_dict: dict) -> tuple(list, list):
     
     distribution_df = pd.DataFrame({'Value': value_counts.index, 'Count': value_counts.values})
     distribution_df['procent'] = distribution_df['Count'] / sum(distribution_df['Count'])
+    df = distribution_df.sort_values('Value').reset_index(drop = True)
 
-    return distribution_df['Value'] ,distribution_df['procent']
+    return df['Value'], df['procent']
 
 
 
@@ -43,7 +44,7 @@ def dict_tot() -> dict:
                         else:
                             tot_dict[charger_name][cap] = [total_avail]
             except:
-                print(f"Charger: {charger_name} not working")
+                print(f"Charger: {charger_name} not present in availability log")
         
     return tot_dict
 
@@ -52,6 +53,7 @@ def tm_one_charger(charger_dict: dict): # -> DataFrame
     """ Returns the tranition matrix, for a given charging station """
     trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next'),
                         pd.Series(charger_dict[:-1],name='Current'),normalize=1)
+
     return trans
 
 def remove_recursive_points(t_dict: dict) -> dict:
@@ -120,8 +122,13 @@ def predict_avail(charger, timesteps, initial_state, trans_matrix):
     predictor.predict(steps=timesteps)
     
 if __name__ == '__main__':
-    test_pred()
+    #test_pred()
 
     #print(dict_tot())
-    #print("22mr3", dict_tot()['yrekr7'])
+    k = dict_tot()["7pgrg"][150]
+    tm = main_pred()["7pgrg"][150]
+    count, proc = init_state("7pgrg", 150, dict_tot())
+    #print(count, proc)
+    print(tm_one_charger(k))
+    print(k)
     

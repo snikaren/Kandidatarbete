@@ -10,7 +10,7 @@ df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 tot_dict = dict_tot()
 " global variabel dict_tot()"
 
-def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -> tuple(int, dict):
+def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -> tuple:
     """ Räknar ut minimala kostnaden för en väg.
         returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
@@ -24,6 +24,7 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -
         
         # Välj den bästa laddaren       # RETURNERAR JUST NU EN LISTA MED KOSTNADEN???
         best_char = choose_charger(char_avail, time_cost)
+        print(best_char)
 
         # calculation on the choosen charger
         # chargers[best_char] = tiden_dit       ## fattar inte rikitigt vad som vill fås ut här???
@@ -37,7 +38,7 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -
     # REPEAT med (plats, TMs, tc)
 
  
-    return total_cost, chargers #, timestops, timecharge?, mer?
+    return total_cost, best_char #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
@@ -69,13 +70,13 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
 
     return char_avail
 
-def choose_charger(avail_dict: dict, tc: float) -> tuple(str, int): 
+def choose_charger(char_avail: dict, tc: float) -> tuple: 
     """ takes a dict of chargers, and calculates the cost of charging at each.
         returns a tuple with (id, cost)"""
     best_charger = 0
     best_charger_cost = 0
-    for charger in avail_dict:   # {charger_name: {50: (soc_50, state_predict[1xn]_50), 45: (soc_45, state_predict[1xn]_45)}}
-        for cap, value in avail_dict[charger].items():
+    for charger in char_avail:   # {charger_name: {50: (soc_50, state_predict[1xn]_50), 45: (soc_45, state_predict[1xn]_45)}}
+        for cap, value in char_avail[charger].items():
             soc = value[0]
             avail = value[1]
             state = value[2]

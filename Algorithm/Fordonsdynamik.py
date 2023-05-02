@@ -1,9 +1,10 @@
 from Konstanter import *
+from charger_iteration import iterate_charger
 import numpy as np
 import pandas as pd
 import time
 import math as m
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 #from charger_iteration import *         #iterate_charger
 
 # Dataframe uppsättning
@@ -189,7 +190,7 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start: int, route: int) -> tuple(dict, bool):
+def iterate(idx_start: int, route: int) -> tuple:
     """ Func that itaretes through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
     which charging-stations are reachable while not running out of energy (soc<20)"""
 
@@ -222,17 +223,18 @@ def iterate(idx_start: int, route: int) -> tuple(dict, bool):
                 # Grabs chargers associated with data points
                 chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
             except:
-                print(index, "Här är det feeeeel")
+                print(index, soc, Current_pd(df, index)['next chargers'])
             
             # If there is a charger close, save it
             for charger in chargers:
                 if charger != "0":
-                    charge_dict[charger] = (soc, total_time)
+                    charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature)
 
         elif soc < 20:
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
+            #charge_dict = iterate_charger(charge_dict)
             soc = 80    # nyladdat batteri
             return charge_dict, False
 
