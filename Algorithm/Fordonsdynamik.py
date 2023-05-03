@@ -128,10 +128,10 @@ def energy_acc(idx):
     velo_previous = float(Current_pd(speed, indx(prev_point(idx)))) / 3.6
 
     #  Regenerative breaking
-    if force_tot(idx) >= 0:
+    if acc_tot(idx) >= 0:
         return force_traction_acc(idx) * dist_acc(idx) / eta
     #  Maximum deaceleration of 2.9 m/s^2
-    elif -2.9 < force_tot(idx) < 0:
+    elif -2.9 < acc_tot(idx) < 0:
         #  Stores the kinetic energy
         #  * eta since acceleration is negative
         return -(eta * m_bil * (velo_current - velo_previous) ** 2) / 2
@@ -196,6 +196,7 @@ def iterate(idx_start: int, route: int) -> tuple:
 
     # dataframe
     init_df(route)
+    
 
     # Starting values
     battery_temperature = 274  # Starting with ambient temp of air

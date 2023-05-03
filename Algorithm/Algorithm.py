@@ -1,14 +1,12 @@
-from predict import main_pred, init_state, predict_avail, ChargingStationPredictor, dict_tot
+from predict import main_pred, init_state, ChargingStationPredictor, dict_tot
 #from predict import *
 from Fordonsdynamik import iterate
 from cost import *
 import math
 import pandas as pd
+from cost_regression import numpy_reg
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
-
-tot_dict = dict_tot()
-" global variabel dict_tot()"
 
 def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -> tuple:
     """ Räknar ut minimala kostnaden för en väg.
@@ -23,8 +21,8 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -
             break
         
         # Välj den bästa laddaren       # RETURNERAR JUST NU EN LISTA MED KOSTNADEN???
-        best_char = choose_charger(char_avail, time_cost)
-        print(best_char)
+        best_char, best_char_cost, index = choose_charger(char_avail, time_cost)
+        #print(best_char, best_char_cost)
 
         # calculation on the choosen charger
         # chargers[best_char] = tiden_dit       ## fattar inte rikitigt vad som vill fås ut här???
@@ -34,11 +32,11 @@ def minimize_road_cost(road: int, chargers: dict, TMs: dict, time_cost: float) -
                 # Kör hampus program
             # total_cost =+ cost_trip
             # Få ut ny tid, plats och SOC - NÄR vi nått nästa punkt
-        current_point += 1
+        current_point = index
     # REPEAT med (plats, TMs, tc)
 
  
-    return total_cost, best_char #, timestops, timecharge?, mer?
+    return total_cost, (best_char, best_char_cost) #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
@@ -56,7 +54,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
     for charger, value in chargers.items():
         for cap in TMs[charger]:
             # set up for pred
-            state, initial_state = init_state(charger, cap, tot_dict) 
+            state, initial_state = init_state(charger, cap) 
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value[1]/60/30)
             predictor = ChargingStationPredictor(state, trans_matrix, initial_state)
@@ -64,9 +62,9 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
             # Runs the predictor the correct amount of steps
             # (soc, state, avail)
             if charger in char_avail:
-                char_avail[charger][cap] = (value[0], predictor.predict(steps=time_steps), state)
+                char_avail[charger][cap] = (value[0], predictor.predict(steps=time_steps), state, chargers[charger][2])
             else:
-                char_avail[charger] = {cap: (value[0], predictor.predict(steps=time_steps), state)}
+                char_avail[charger] = {cap: (value[0], predictor.predict(steps=time_steps), state, chargers[charger][2])}
 
     return char_avail
 
@@ -75,29 +73,34 @@ def choose_charger(char_avail: dict, tc: float) -> tuple:
         returns a tuple with (id, cost)"""
     best_charger = 0
     best_charger_cost = 0
+    a = numpy_reg()
     for charger in char_avail:   # {charger_name: {50: (soc_50, state_predict[1xn]_50), 45: (soc_45, state_predict[1xn]_45)}}
         for cap, value in char_avail[charger].items():
             soc = value[0]
             avail = value[1]
             state = value[2]
+            index = value[3]
 
             # TODO funktionerna price_from_capa, el_consum, time_charge
+            # TODO maybe... lägg till förarprofiler som värderar de olika kostnaderna olika högt?
             ## Kolla kostnad         kr
-            cost_el = Func_price_from_capa(cap)     # Löser sen /jakob_henrik
+            cost_el = Func_price_from_capa(cap, a)     # Löser sen /jakob_henrik
             tot_el = Func_el_consum(soc, cap)      # Hampus gör idag 24/4      # Kan flyttas till utanför for-loop
             tot_cost_el = cost_el * tot_el 
         
             ## kolla tid att ladda   tid->kr
             time_charge = Func_time_charge(soc, cap)           # Lös från FD
             tot_cost_time = tc * time_charge
+
+            ## Kolla vad SOC är och vikta från det
+            soc_cost = func_soc_cost(soc)
         
             ## Kolla avail           true/false      
             avail_procent, avail_num = get_avail_value(avail, state)       # (0-1), (numerical)
             # Räkna ut en faktor som används för att väga procent mot antal
             faktor = 4
             avail_factor = avail_procent*faktor + avail_num
-            total_cost = (tot_cost_el + tot_cost_time) / avail_factor
-
+            total_cost = (tot_cost_el + tot_cost_time + soc_cost) / avail_factor
             if best_charger == 0:
                 best_charger = charger
                 best_charger_cost = total_cost
@@ -105,7 +108,7 @@ def choose_charger(char_avail: dict, tc: float) -> tuple:
                 best_charger = charger
                 best_charger_cost = total_cost
 
-    return (best_charger, best_charger_cost)
+    return best_charger, best_charger_cost, index
         
 
 def main():
@@ -117,6 +120,7 @@ def main():
     time_cost = 10  #ger bara ett nummer för tester
     min_cost, chargersList[0] = minimize_road_cost(roads[0], chargersList[0], TMs, time_cost)       # returns the cost of choosing that road
     best_road_idx = 0
+    return chargersList[0]
     for i in range(1, len(roads)):
         tot_cost, chargersList[i] = minimize_road_cost(roads[i], chargersList[i], TMs, time_cost)
         if tot_cost < min_cost:
@@ -129,5 +133,5 @@ def testing_func():
 
 
 if __name__ == "__main__":
-    main()
+    print(main())
     #testing_func()

@@ -5,24 +5,8 @@ import math
 import json
 import random
 
-def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
-    """ Creates the initial state for a charging station"""
-    # create a pandas series
-    my_series = pd.Series(tot_dict[name][capacity])
-
-    # get the count of occurrences of each unique value
-    value_counts = my_series.value_counts(sort=True)
-    
-    distribution_df = pd.DataFrame({'Value': value_counts.index, 'Count': value_counts.values})
-    distribution_df['procent'] = distribution_df['Count'] / sum(distribution_df['Count'])
-    df = distribution_df.sort_values('Value').reset_index(drop = True)
-
-    return df['Value'], df['procent']
-
-
-
 def dict_tot() -> dict:
-    """ returns a dictonary for the charching stations containing the availability over the measured period"""
+    """ Returns a dictonary for the charching stations containing the availability over the measured period"""
     f = open(r'Algorithm\Info.json')
     f2 = open(r'Algorithm/avail2023-03-13_16-43-55.json')
     info = json.load(f)
@@ -44,9 +28,28 @@ def dict_tot() -> dict:
                         else:
                             tot_dict[charger_name][cap] = [total_avail]
             except:
-                print(f"Charger: {charger_name} not present in availability log")
+                pass
         
     return tot_dict
+
+tot_dict = dict_tot()
+
+def init_state(name: str, capacity: int) -> tuple:
+    """ Creates the initial state for a charging station"""
+    
+    #global tot_dict
+    # create a pandas series
+    my_series = pd.Series(tot_dict[name][capacity])
+
+    # get the count of occurrences of each unique value
+    value_counts = my_series.value_counts(sort=True)
+    
+    distribution_df = pd.DataFrame({'Value': value_counts.index, 'Count': value_counts.values})
+    distribution_df['procent'] = distribution_df['Count'] / sum(distribution_df['Count'])
+    df = distribution_df.sort_values('Value').reset_index(drop = True)
+
+    return df['Value'], df['procent']
+
 
 # https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
 def tm_one_charger(charger_dict: dict): # -> DataFrame
@@ -73,7 +76,7 @@ def remove_recursive_points(t_dict: dict) -> dict:
 def main_pred() -> dict:
     """ a func that returns the dict of all availability of all chargers in info, 
     with recuring points removed"""
-    dt = dict_tot()
+    dt = tot_dict
     d = {}
     for charger in dt:
         d[charger] = {}
@@ -114,21 +117,6 @@ def test_pred():
 
     print(predictor.predict(steps=1))
     print(predictor.predict(steps=2))
-
-
-def predict_avail(charger, timesteps, initial_state, trans_matrix):
-    """ Func that runs the class CSP the correct amount of timesteps"""
-    predictor = ChargingStationPredictor(charger, trans_matrix, initial_state)
-    predictor.predict(steps=timesteps)
     
-if __name__ == '__main__':
+#if __name__ == '__main__':
     #test_pred()
-
-    #print(dict_tot())
-    k = dict_tot()["7pgrg"][150]
-    tm = main_pred()["7pgrg"][150]
-    count, proc = init_state("7pgrg", 150, dict_tot())
-    #print(count, proc)
-    print(tm_one_charger(k))
-    print(k)
-    
