@@ -10,8 +10,10 @@ df = ""
 grads, speed, dists = 0,0,0
 df_charge = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
+
 def init_df(route):
-    global df, df_charge, grads, speed, dists, dist_to_point_after_charger, charger_elev, nearest_highway, highway_dist
+    global df, df_charge, grads, speed, dists, dist_to_point_after_charger, charger_grads_next, charger_grads_prev, nearest_highway, highway_dist
+    global dist_from_highway_to_prev, dist_from_highway_to_next
     if route == 1:
         df = pd.read_csv(r'Algorithm\excel\rutt_1.csv')
     elif route == 2:
@@ -23,9 +25,13 @@ def init_df(route):
     speed = df['speed limit']
     dists = df['dist to next[Km]']
     dist_to_point_after_charger = df_charge['dist to next point']
-    charger_elev = df_charge['elevation']
+    charger_grads_next = df_charge['gradient next']
+    charger_grads_prev = df_charge['gradient prev']
     nearest_highway = df_charge['nearest highway']
-    highway_dist = df_charge['nearest highway']
+    highway_dist = df_charge['dist to highway']
+
+    dist_from_highway_to_prev = df_charge["dist to prev point"]
+    dist_from_highway_to_next = df_charge["dist to next point"]
 
 #  Läser in csv-filen # Dict med hastighet som key och acc_tid som value
 data = np.loadtxt(r'Algorithm\excel\AccelerationsTider.csv', delimiter=";", skiprows=1)
@@ -74,7 +80,7 @@ def force_air(point, mode):
 
 
 def force_elevation(point):
-    elev_current = point["current_elev"]
+    elev_current = point["current_gradient"]
     return m_bil * g * (np.sin(elev_current) + c_r * np.cos(elev_current))
 
 
@@ -153,7 +159,7 @@ def energy_hvch(point):
 def total_energy(point):
     #  Energy while accelerating + energy while constant velocity + energy due to heating
     tot_energy = ((energy_acc(point) + energy_const_velo(point)) * slip + energy_hvch(point))
-
+    
     return tot_energy
 
 # Change in state of charge
@@ -178,7 +184,6 @@ def battery_temperature_change(point, soc, battery_temperature):
     Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(point)/(u_o_c(soc)*(time_acc(point)+time_constant_velo(point))*cells_in_series))**2)
     Q_exchange = h_conv*l_battery*w_battery*(battery_temperature-t_amb)
     Q_drive = abs(0.05*(energy_acc(point)+energy_const_velo(point)))
-    print(Q_exchange, Q_loss, Q_drive, h_conv)
 
     d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
 
@@ -189,118 +194,67 @@ def internal_resistance_battery(battery_temperature):
     return (90.196*m.e**(-0.08*(battery_temperature-274)) + 25.166)/1000
 
 
-def iterate_charger(chargers: dict, temp: int, s_o_c: int, start_idx: int) -> dict:
-
-    #For every charger
-        # Get the start time
-        # Set the initial values (temp, soc, etc)
-        # Simulate from the start point to the charger
-        # Get the end time
-        # Calculate the total time
-        # Calculate the total energy consumption
-        # Calculate the total distance
-    # Return modified chargers dict
+def iterate_charger(chargers: dict, route: int) -> dict:
+    init_df(route)
 
     charge_dict = {}
 
     #  Iterating over road points
-    for charger in chargers:
-        """
-        battery_temperature = temp
-        total_energy_consumption = 0
-        total_distance = 0
-        total_time = 0
-        soc = s_o_c
-        """
-        soc = charger[0]
-        total_time = charger[1]
-        start_idx = charger[2]
-        total_energy_consumption = charger[3]
-        total_distance = charger[4]
-        battery_temperature = charger[5]
+    for name, charger in chargers.items():
+        soc = charger['soc']
+        total_time = charger['time']
+        start_idx = charger['index']
+        total_energy_consumption = charger['energy_con']
+        total_distance = charger['distance']
+        battery_temperature = charger['temp']
 
-        charger_idx = df_charge['name'].index(charger)
-        
-        #TEST POINT for a charger going from location where we "decide" to charge.
-        #This should be changed so we have 4 points (represented as 3 "point" since it contains info about both of them).
-        # 1. where we decide to charge
-        # 2. where we leave the highway
-        # 3. where the charger is 
-        # 4. where we go back onto the highway
-        point = {
-            "current_velocity": charger_speed_limit,
-            "prev_velocity": float(Current_pd(speed, start_idx)),
-            "current_elev": charger_elev[charger_idx],
-            "dist_to_next_point": dist_to_point_after_charger[charger_idx],
-        }
+        charger_idx = df_charge.index[df_charge['name']==name].tolist()[0]
 
         # 1: start_idx -> nearest_highway (räkna ut dist som kommer vara starting distance (total_distance))
         # 2: nearest_highway -> charger (finns "dist to highway")
         # 3: charger -> nearest_highway (finns "dist to highway")
 
-        highway_point = nearest_highway[charger_idx]
-        higway_speed_limit = float(Current_pd(speed, start_idx))
+
+        p0 = {
+            "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,         
+            "prev_velocity": float(Current_pd(speed, start_idx)),
+            "current_gradient": float(Current_pd(grads, start_idx)), #finns det någon för highway? annars ta samma som start_idx
+            "dist_to_next_point": float(Current_pd(highway_dist, charger_idx)) #dist to charger
+        }
 
         p1 = {
-            "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,         # uppdaterade hastigheterna tilll det de borde vara enligt dina instruktioner / henrik
-            "prev_velocity": float(Current_pd(speed, prev_point(start_idx))),
-            "current_elev": 0, #finns det någon för highway? annars ta samma som start_idx
-            "dist_to_next_point": highway_dist[charger_idx] #dist to charger
+            "current_velocity": charger_speed_limit,
+            "prev_velocity": charger_speed_limit, # highway_speed_limit,
+            "current_gradient": -float(Current_pd(charger_grads_prev, charger_idx)), #Vi kör åt andra hållet så bör vara negativt?
+            "dist_to_next_point": float(Current_pd(highway_dist, charger_idx)) #dist back to highway
         }
 
         p2 = {
-            "current_velocity": charger_speed_limit,
-            "prev_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,
-            "current_elev": charger_elev[charger_idx],
-            "dist_to_next_point": highway_dist[charger_idx] #dist back to highway
-        }
-
-        p3 = {
-            "current_velocity": charger_speed_limit, # highway_speed_limit,
+            "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,
             "prev_velocity": charger_speed_limit,
-            "current_elev": 0, #finns det någon för highway? annars ta samma som start_idx
-            "dist_to_next_point": 0 #TODO: Här behöver vi till nästa punkt efter laddning.. detta måste komma in i Fordonsdynamik på något sätt
+            "current_gradient": float(Current_pd(charger_grads_next, charger_idx)), #finns det någon för highway? annars ta samma som på vägen
+            "dist_to_next_point": float(Current_pd(dist_from_highway_to_next, charger_idx))
         }
 
-        #Kanske kommer behöva något av detta senare eller så sker det i fordonsdynamik
-        '''
-        #get lat/long from start_index and nearest highway
+        total_distance = dist_from_highway_to_prev[charger_idx] #Starting distance
 
-        R = 6373.0
+        for p in [p0, p1, p2]:
+            total_energy_consumption = total_energy_consumption + total_energy(p) 
+            soc -= s_o_c_change(p, soc)
+            total_distance += (dist_const_velo(p) + dist_acc(p))
+            total_time += (time_acc(p) + time_constant_velo(p))         # [s]
+            battery_temperature += battery_temperature_change(p, soc, battery_temperature)
 
-        #negativ longitude för jag tror alla longituder är W??
-
-        lat1 = radians(lat1)
-        lon1 = radians(-lon1)
-        lat2 = radians(lat2)
-        lon2 = radians(-lon2)
-
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        distance = R * c
-        '''
-
-        for _ in range(2):
-            # For every iteration calculate and add each import
-            temp_total_energy_consumption = total_energy_consumption + total_energy(point) 
-            soc -= s_o_c_change(point, soc)
-            total_distance += (dist_const_velo(point) + dist_acc(point))
-            total_time += (time_acc(point) + time_constant_velo(point))         # [s]
-            battery_temperature += battery_temperature_change(point, soc, battery_temperature)
-        
-
-        charge_dict[charger] = \
-        {
-            'energy_con': temp_total_energy_consumption, 
-            'soc': soc, 
-            'distance': total_distance, 
-            'time': total_time, 
-            'temp': battery_temperature
-        }
+        if soc > 20:
+            charge_dict[name] = \
+            {
+                'energy_con': total_energy_consumption, 
+                'soc': soc, 
+                'distance': total_distance, 
+                'time': total_time, 
+                'temp': battery_temperature,
+                'index': start_idx + 1
+            }
 
     return charge_dict
 
@@ -316,3 +270,8 @@ def Current_pd(pds, idx):
 # Hittar tidigare punkt från nuvarnde idx
 def prev_point(idx):
     return df.iloc[idx]['previous']
+
+if __name__ == "__main__":
+    init_df(1)
+    x = iterate_charger({"jqne9e": (50, 0, 4, 0, 0, 274)})
+    print(x)

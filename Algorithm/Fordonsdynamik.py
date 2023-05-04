@@ -193,10 +193,13 @@ def internal_resistance_battery(battery_temperature):
 def iterate(idx_start: int, route: int) -> tuple:
     """ Func that itaretes through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
     which charging-stations are reachable while not running out of energy (soc<20)"""
-
-    # dataframe
-    init_df(route)
     
+
+    init_df(route)
+
+    
+    len_df = len(df)
+
 
     # Starting values
     battery_temperature = 274  # Starting with ambient temp of air
@@ -206,9 +209,11 @@ def iterate(idx_start: int, route: int) -> tuple:
     soc = 100 * max_battery/Battery_joules  # Starting with soc=80
     charge_dict = {}   
 
+    index = idx_start
     #  Iterating over road points
-    for index in range(idx_start, len(df)-1):
-
+    #for index in range(idx_start, len_df-1):
+    while index < len_df-1:
+            
         # For every iteration calculate and add each import
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc)
@@ -229,15 +234,26 @@ def iterate(idx_start: int, route: int) -> tuple:
             # If there is a charger close, save it
             for charger in chargers:
                 if charger != "0":
-                    charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature)
+                    #charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature, road_2)
+                    charge_dict[charger] = \
+                    {
+                        'energy_con': total_energy_consumption, 
+                        'soc': soc, 
+                        'distance': total_distance, 
+                        'time': total_time, 
+                        'temp': battery_temperature,
+                        'index': index
+                    }
 
         elif soc < 20:
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
-            #charge_dict = iterate_charger(charge_dict)
+            charge_dict = iterate_charger(charge_dict, route)
             soc = 80    # nyladdat batteri
             return charge_dict, False
+
+        index += 1
 
     return charge_dict, True
 
