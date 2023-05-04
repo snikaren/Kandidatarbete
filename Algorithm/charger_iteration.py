@@ -217,7 +217,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
 
         p0 = {
             "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,         
-            "prev_velocity": float(Current_pd(speed, start_idx)),
+            "prev_velocity": float(Current_pd(speed, start_idx-1)),
             "current_gradient": float(Current_pd(grads, start_idx)), #finns det någon för highway? annars ta samma som start_idx
             "dist_to_next_point": float(Current_pd(highway_dist, charger_idx)) #dist to charger
         }
@@ -245,7 +245,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             total_time += (time_acc(p) + time_constant_velo(p))         # [s]
             battery_temperature += battery_temperature_change(p, soc, battery_temperature)
 
-        if soc > 20:
+        if soc > 18:
             charge_dict[name] = \
             {
                 'energy_con': total_energy_consumption, 
@@ -273,5 +273,5 @@ def prev_point(idx):
 
 if __name__ == "__main__":
     init_df(1)
-    x = iterate_charger({"jqne9e": (50, 0, 4, 0, 0, 274)})
+    x = iterate_charger({"jqne9e": (50, 0, 4, 0, 0, 274)}, 1)
     print(x)

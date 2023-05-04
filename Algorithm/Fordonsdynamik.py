@@ -245,7 +245,7 @@ def iterate(idx_start: int, route: int) -> tuple:
                         'index': index
                     }
 
-        elif soc < 18:
+        elif soc < 20:
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
