@@ -111,6 +111,7 @@ def time(init_soc,final_soc,charging_powah,soc_value,charger,battery_temperature
 
     # Predict y-values using the model
     predicted_energy = model_1.predict(np.array([[charger]])) + ((final_soc-soc_value)/100)*69 #Lägger till Energi för laddningen
+    predicted_energy = predicted_energy*3,6*10^6 #Gör om till Joule
     predicted_temp = model_2.predict(np.array([[charger]]))
 
 
@@ -125,7 +126,7 @@ def time(init_soc,final_soc,charging_powah,soc_value,charger,battery_temperature
     header_array = ["SOC"] + pre_header_array
     SOC_array = np.arange(soc_value,80,1) #array 20 -> 80
 
-    with open("time_real.csv","w",newline = "") as file:
+    with open("Algorithm/excel/time_real.csv","w",newline = "") as file:
         writer = csv.writer(file)
         writer.writerow(header_array)
         for i in range(len(SOC_array)):
@@ -134,7 +135,7 @@ def time(init_soc,final_soc,charging_powah,soc_value,charger,battery_temperature
                 row.append(max_charging_power_dict[key][i])
             writer.writerow(row)
     #uppdaterad
-    df2 = pd.read_csv("time_real.csv",delimiter=",")
+    df2 = pd.read_csv(r"Algorithm/excel/time_real.csv",delimiter=",")
     x_data = list(max_charging_power_dict.keys()) #samtliga charging power lista
     x_data.pop(-1)
     y_data = list(df2.iloc[-1,1:].values)#lista med tot tid att ladda
@@ -163,6 +164,9 @@ def main(soc: float, cap: int, charging_powah) -> tuple:
     soc_value = init_soc
     final_soc = 80
     charger = cap # int(input("Enter the charger power provided: "))
+    if charger > 250:
+        charger = 250
+
     batteritemp = 293.15
 
     #Spotta ut tiden

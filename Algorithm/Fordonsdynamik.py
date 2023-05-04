@@ -224,12 +224,12 @@ def iterate(idx_start: int, route: int) -> tuple:
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 40:
+        if 20 < soc < 55:
             try:
                 # Grabs chargers associated with data points
                 chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
             except:
-                print(index, soc, Current_pd(df, index)['next chargers'])
+                pass
             
             # If there is a charger close, save it
             for charger in chargers:
@@ -245,7 +245,7 @@ def iterate(idx_start: int, route: int) -> tuple:
                         'index': index
                     }
 
-        elif soc < 20:
+        elif soc < 18:
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
@@ -254,7 +254,6 @@ def iterate(idx_start: int, route: int) -> tuple:
             return charge_dict, False
 
         index += 1
-
     return charge_dict, True
 
 

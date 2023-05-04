@@ -15,7 +15,8 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float) -> tuple:
     current_point = 1
     total_cost = 0
     total_time = 0
-    best_chargers = []
+    total_driving_time = 0
+    best_chargers = {}
     while True:
         
         # Simuluera fram tills vi måste ladda 
@@ -24,10 +25,12 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float) -> tuple:
             break
         
         # Välj den bästa laddaren       # RETURNERAR JUST NU EN LISTA MED KOSTNADEN???
-        best_char, best_char_cost, index, time_charge, time_drive = choose_charger(char_avail, time_cost)
+        best_char, best_char_cost, index, time_charge, time_drive, soc = choose_charger(char_avail, time_cost)
         #print(best_char, best_char_cost)
-        best_chargers.append(best_char)
+        best_chargers[best_char] = soc
         total_time += time_charge + time_drive
+        total_driving_time += time_drive
+        #print(total_driving_time)
         total_cost += best_char_cost + total_time * time_cost
 
         # calculation on the choosen charger
@@ -42,7 +45,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float) -> tuple:
     # REPEAT med (plats, TMs, tc)
 
 
-    return total_cost, best_chargers, total_time #, timestops, timecharge?, mer?
+    return total_cost, best_chargers, (total_time/3600, total_driving_time/3600) #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
@@ -77,6 +80,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict) -> dict:
 def choose_charger(char_avail: dict, tc: float) -> tuple[str, float, int]: 
     """ takes a dict of chargers, and calculates the cost of charging at each.
         returns a tuple with (id, cost)"""
+    best_time_charge = 0
+    best_time_drive = 0
     best_charger = 0
     best_charger_cost = 0
     a = numpy_reg()
@@ -101,13 +106,14 @@ def choose_charger(char_avail: dict, tc: float) -> tuple[str, float, int]:
 
             ## Kolla vad SOC är och vikta från det
             soc_cost = func_soc_cost(soc)
+            soc_amount = 80 - soc
         
             ## Kolla avail           true/false      
             avail_procent, avail_num = get_avail_value(avail, state)       # (0-1), (numerical)
             # Räkna ut en faktor som används för att väga procent mot antal
             faktor = 4
             avail_factor = avail_procent*faktor + avail_num
-            total_cost = (tot_cost_el + tot_cost_time + soc_cost) / avail_factor
+            total_cost = (tot_cost_el + tot_cost_time + soc_cost) / (soc_amount * avail_factor)
 
             # Checks if this is the best charger
             if total_cost < best_charger_cost or best_charger == 0:
@@ -115,9 +121,10 @@ def choose_charger(char_avail: dict, tc: float) -> tuple[str, float, int]:
                 best_charger_cost = total_cost
                 best_time_drive = drive_time
                 best_time_charge = time_charge
+                best_index = index
 
 
-    return best_charger, best_charger_cost, index, best_time_charge, best_time_drive
+    return best_charger, best_charger_cost, best_index, best_time_charge, best_time_drive, soc
         
 
 def main():
@@ -131,13 +138,12 @@ def main():
     min_cost, chargersList[0], total_road_time[0] = minimize_road_cost(roads[0], TMs, time_cost)       # returns the cost of choosing that road
     best_road_idx = 0
 
-    print(min_cost, chargersList, total_road_time)
     for i in range(1, len(roads)):
         tot_cost, chargersList[i], total_road_time[i] = minimize_road_cost(roads[i], TMs, time_cost)
         if tot_cost < min_cost:
             min_cost = tot_cost
             best_road_idx = i
-        print(min_cost, chargersList, total_road_time)
+    print(f"Minimum cost: {min_cost}, Charger list: {chargersList}, Total road time: {total_road_time}")
     return roads[best_road_idx], min_cost
 
 
