@@ -163,7 +163,7 @@ def total_energy(point):
     return tot_energy
 
 # Change in state of charge
-def s_o_c_change(point, soc):
+def s_o_c_change(point: dict, soc: float):
     return total_energy(point)/(u_o_c(soc)*200*3600)
 
 
@@ -198,9 +198,11 @@ def iterate_charger(chargers: dict, route: int) -> dict:
     init_df(route)
 
     charge_dict = {}
+    soc_at_charger = 0
 
     #  Iterating over road points
     for name, charger in chargers.items():
+        charger_dist = 0
         soc = charger['soc']
         total_time = charger['time']
         start_idx = charger['index']
@@ -218,42 +220,54 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         p0 = {
             "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,         
             "prev_velocity": float(Current_pd(speed, start_idx-1)),
-            "current_gradient": float(Current_pd(grads, start_idx)), #finns det någon för highway? annars ta samma som start_idx
-            "dist_to_next_point": float(Current_pd(highway_dist, charger_idx)) #dist to charger
+            "current_gradient": float(Current_pd(charger_grads_prev, charger_idx)),  #finns det någon för highway? annars ta samma som start_idx
+            "dist_to_next_point": float(Current_pd(dist_from_highway_to_prev, charger_idx)) #dist to charger
         }
 
         p1 = {
             "current_velocity": charger_speed_limit,
-            "prev_velocity": charger_speed_limit, # highway_speed_limit,
-            "current_gradient": -float(Current_pd(charger_grads_prev, charger_idx)), #Vi kör åt andra hållet så bör vara negativt?
+            "prev_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,
+            "current_gradient": -float(Current_pd(grads, start_idx)), #Vi kör åt andra hållet så bör vara negativt?
             "dist_to_next_point": float(Current_pd(highway_dist, charger_idx)) #dist back to highway
         }
 
         p2 = {
+            "current_velocity": charger_speed_limit, # highway_speed_limit,
+            "prev_velocity": 0,
+            "current_gradient": float(Current_pd(grads, start_idx)),  #finns det någon för highway? annars ta samma som på vägen
+            "dist_to_next_point": float(Current_pd(highway_dist, charger_idx))
+        }
+
+        p3 = {
             "current_velocity": float(Current_pd(speed, start_idx)), # highway_speed_limit,
             "prev_velocity": charger_speed_limit,
             "current_gradient": float(Current_pd(charger_grads_next, charger_idx)), #finns det någon för highway? annars ta samma som på vägen
             "dist_to_next_point": float(Current_pd(dist_from_highway_to_next, charger_idx))
         }
-
         total_distance = dist_from_highway_to_prev[charger_idx] #Starting distance
 
-        for p in [p0, p1, p2]:
+        for p in [p0, p1, p2, p3]:
             total_energy_consumption = total_energy_consumption + total_energy(p) 
+            if p == p2:
+                soc_at_charger = soc
+                soc = 80
             soc -= s_o_c_change(p, soc)
             total_distance += (dist_const_velo(p) + dist_acc(p))
-            total_time += (time_acc(p) + time_constant_velo(p))         # [s]
+            charger_dist += (dist_const_velo(p) + dist_acc(p))
+            total_time += (time_acc(p) + time_constant_velo(p))
             battery_temperature += battery_temperature_change(p, soc, battery_temperature)
 
-        if soc > 18:
+        if soc_at_charger > 20:
             charge_dict[name] = \
             {
                 'energy_con': total_energy_consumption, 
-                'soc': soc, 
+                'soc_charger': soc_at_charger,
+                'soc': soc,
                 'distance': total_distance, 
                 'time': total_time, 
                 'temp': battery_temperature,
-                'index': start_idx + 1
+                'index': start_idx + 1,
+                'highway_dist': charger_dist
             }
 
     return charge_dict

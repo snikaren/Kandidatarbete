@@ -190,9 +190,20 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start: int, route: int) -> tuple:
-    """ Func that itaretes through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
-    which charging-stations are reachable while not running out of energy (soc<20)"""
+def iterate(idx_start: int, route: int, soc: float) -> tuple:
+    """ Func that iterates through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
+    which charging-stations are reachable while not running out of energy (soc<20)
+    charge_dict[name] = 
+        {
+            'energy_con': total_energy_consumption, 
+            'soc_charger': soc_charger,
+            'soc': soc,
+            'distance': total_distance, 
+            'time': total_time, 
+            'temp': battery_temperature,
+            'index': start_idx + 1
+        }
+    """
     
 
     init_df(route)
@@ -206,30 +217,67 @@ def iterate(idx_start: int, route: int) -> tuple:
     total_energy_consumption = 0
     total_distance = 0
     total_time = 0
-    soc = 100 * max_battery/Battery_joules  # Starting with soc=80
     charge_dict = {}   
 
+    first_trial = True
+    prev_soc = 80
     index = idx_start
     #  Iterating over road points
     #for index in range(idx_start, len_df-1):
     while index < len_df-1:
             
         # For every iteration calculate and add each import
+        prev_values = \
+        {
+            'energy_con': total_energy_consumption, 
+            'soc': soc, 
+            'distance': total_distance, 
+            'time': total_time, 
+            'temp': battery_temperature,
+            'index': index - 1
+        }
+        
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc)
         total_distance += (dist_const_velo(index) + dist_acc(index))
         total_time += (time_acc(index) + time_constant_velo(index))
         battery_temperature += battery_temperature_change(index, soc, battery_temperature)
 
+        params = \
+        {
+            'energy_con': total_energy_consumption, 
+            'soc': soc, 
+            'distance': total_distance, 
+            'time': total_time, 
+            'temp': battery_temperature,
+            'index': index
+        }
+        
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 55:
+        if 20 < soc < 40:
+            # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
+            # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
+    
             try:
                 # Grabs chargers associated with data points
                 chargers = tuple(map(str, Current_pd(df, index)['next chargers'].split(', ')))
             except:
                 pass
+
+            # First time we get soc < 40, we collect all the chargers that were in the previous interval
+            if first_trial:
+                try:
+                    # Grabs chargers associated with data points
+                    chargers_prev = tuple(map(str, Current_pd(df, index-1)['next chargers'].split(', ')))
+                    for charger in chargers_prev:
+                        if charger != "0":
+                            #charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature, road_2)
+                            charge_dict[charger] = prev_values
+                except:
+                    pass
+                first_trial = False
             
             # If there is a charger close, save it
             for charger in chargers:
@@ -243,18 +291,19 @@ def iterate(idx_start: int, route: int) -> tuple:
                         'time': total_time, 
                         'temp': battery_temperature,
                         'index': index
+                        
                     }
-
+                    
         elif soc < 20:
             # Bort komenterat för testning
             # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
             charge_dict = iterate_charger(charge_dict, route)
-            soc = 80    # nyladdat batteri
+            ##soc = 80    # nyladdat batteri
             return charge_dict, False
 
         index += 1
-    return charge_dict, True
+    return params, True
 
 
 ######################
