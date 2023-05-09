@@ -242,7 +242,8 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'distance': total_distance, 
             'time': total_time, 
             'temp': battery_temperature,
-            'index': index - 1
+            'index': index - 1,
+            'plot_params': plot_parameters
         }
         
         total_energy_consumption += total_energy(index)
@@ -259,13 +260,11 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'distance': total_distance, 
             'time': total_time, 
             'temp': battery_temperature,
-            'index': index
+            'index': index,
+            'plot_params': plot_parameters
         }
 
-        plot_parameters['temp'].append(battery_temperature)
-        plot_parameters['dist'].append(total_distance)
-        plot_parameters['time'].append(total_time)
-        plot_parameters['idx'].append(total_time)
+
 
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
@@ -304,7 +303,8 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
                         'distance': total_distance, 
                         'time': total_time, 
                         'temp': battery_temperature,
-                        'index': index
+                        'index': index,
+                        'plot_params': plot_parameters
                         
                     }
                     
@@ -313,6 +313,11 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             charge_dict = iterate_charger(charge_dict, route)
             ##soc = 80    # nyladdat batteri
             return charge_dict, False
+        
+        plot_parameters['temp'].append(battery_temperature)
+        plot_parameters['dist'].append(total_distance)
+        plot_parameters['time'].append(total_time)
+        plot_parameters['idx'].append(index)
 
         index += 1
     return params, True

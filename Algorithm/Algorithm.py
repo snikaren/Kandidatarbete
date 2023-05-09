@@ -7,6 +7,7 @@ import math
 import pandas as pd
 from cost_regression import numpy_reg
 from battery_time_regression import charging_powah
+import matplotlib.pyplot as plt
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
@@ -20,6 +21,13 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     soc = 100 * max_battery/Battery_joules
     total_driving_time = 0
     best_chargers = {}
+    plot_parameters = \
+    {
+        'idx': [],
+        'temp': [],
+        'dist': [],
+        'time': []
+    }
     while True:
         
         # Simuluera fram tills vi måste ladda, hämtar laddare i området, och ger parametrarna för dessa
@@ -32,6 +40,8 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
             total_energy = char_avail['energy_con'] + total_energy
             total_cost = total_cost_chargers + total_time * time_cost * profil[0] + total_energy/3600000 * profil[1]
             final_soc = char_avail['soc']
+            for param in ["idx", "temp", "dist", "time"]:
+                plot_parameters[param] += char_avail['plot_params'][param]
             break
         
         # Välj den bästa laddaren
@@ -45,12 +55,14 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_driving_time += best_char['drive time']
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
+        for param in ["idx", "temp", "dist", "time"]:
+            plot_parameters[param] += best_char['plot_params'][param]
 
         current_point = best_char['index']
         soc = best_char['soc']
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active/60,2)} minutes before reaching charger")
 
-    return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy #, timestops, timecharge?, mer?
+    return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
@@ -83,7 +95,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                     'index': chargers[charger]['index'],
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
-                    'temp_at_charger': chargers[charger]['temp_at_charger']
+                    'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'plot_params': chargers[charger]['plot_params']
                 }
             else:
                 char_avail[charger] = {cap: \
@@ -96,7 +109,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                     'index': chargers[charger]['index'],
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
-                    'temp_at_charger': chargers[charger]['temp_at_charger']
+                    'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'plot_params': chargers[charger]['plot_params']
                 }
                 }
                                         
@@ -133,6 +147,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             distance = value['distance']
             energy_consumption = value['energy_consumption']
             temp_at_charger = value['temp_at_charger']
+            plot_parameters = value['plot_params']
 
             # TODO maybe... lägg till förarprofiler som värderar de olika kostnaderna olika högt?
             ## Kolla kostnad         kr
@@ -169,12 +184,31 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'index': index,
                     'distance': distance,
                     'energy consumption': energy_consumption,
-                    'temperature': temp_at_charger 
+                    'temperature': temp_at_charger,
+                    'plot_params': plot_parameters
                 }
 
 
     return best_charger, profile
-        
+
+def plot_routes(plot_params):
+    names = ["Route 1", "Route 2", "Route 3"]
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 12))
+    fig.subplots_adjust(hspace=0.4)
+
+    for i in range(len(names)):
+        fig.suptitle(names[i])
+        for param in ['temp', 'dist', 'time']:
+            ax = axes[i]
+            ax.set_title(param)
+            x = plot_params[i]['idx']
+            y = plot_params[i][param]
+            ax.plot(x, y, label=param)
+            ax.legend()
+
+    plt.show()
+
 
 def main():
     """ Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. 
@@ -188,19 +222,22 @@ def main():
     costs = [0,0,0]
     total_energy = [0,0,0]
     final_socs = [0,0,0]
+    plot_parameters = [0,0,0]
     chargersList = [{}, {}, {}]
     time_cost = 10  #ger bara ett nummer för tester
-    min_cost, chargersList[0], total_road_time[0], final_socs[0], total_energy[0] = minimize_road_cost(roads[0], TMs, time_cost, profile)       # returns the cost of choosing that road
+    min_cost, chargersList[0], total_road_time[0], final_socs[0], total_energy[0], plot_parameters[0] = minimize_road_cost(roads[0], TMs, time_cost, profile)       # returns the cost of choosing that road
     costs[0] = min_cost
     best_road_idx = 0
 
     for i in range(1, len(roads)):
-        tot_cost, chargersList[i], total_road_time[i], final_socs[i], total_energy[i] = minimize_road_cost(roads[i], TMs, time_cost, profile)
+        tot_cost, chargersList[i], total_road_time[i], final_socs[i], total_energy[i], plot_parameters[i] = minimize_road_cost(roads[i], TMs, time_cost, profile)
         costs[i] = tot_cost
         if tot_cost < min_cost:
             min_cost = tot_cost
             best_road_idx = i
     print(f"Minimum cost: {min_cost}, \n Charger list:\n {chargersList[0]} \n {chargersList[1]} \n {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
+    print(plot_parameters)
+    plot_routes(plot_parameters)
     return roads[best_road_idx], min_cost
 
 
