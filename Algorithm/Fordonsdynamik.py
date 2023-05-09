@@ -176,14 +176,14 @@ def battery_temperature_change(idx, soc, battery_temperature):
     h_conv = (N_u*k_air)/l_battery           # H-number
 
     #  Ahads equation but with number of cells is series and divided by time
-    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)#*(time_acc(idx)+time_constant_velo(idx))
+    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)*(time_acc(idx)+time_constant_velo(idx))
     Q_exchange = h_conv*l_battery*w_battery*(battery_temperature-t_amb)
     Q_drive = abs(0.05*(energy_acc(idx)+energy_const_velo(idx)))
 
     d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
 
     t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)
- 
+
     return d_T, t_active
 
 
@@ -220,7 +220,13 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
     total_distance = 0
     total_time = 0
     charge_dict = {}   
-
+    plot_parameters = \
+    {
+        'idx': [],
+        'temp': [],
+        'dist': [],
+        'time': []
+    }
     first_trial = True
     prev_soc = 80
     index = idx_start
@@ -255,7 +261,12 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'temp': battery_temperature,
             'index': index
         }
-        
+
+        plot_parameters['temp'].append(battery_temperature)
+        plot_parameters['dist'].append(total_distance)
+        plot_parameters['time'].append(total_time)
+        plot_parameters['idx'].append(total_time)
+
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
@@ -298,8 +309,6 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
                     }
                     
         elif soc < 20:
-            # Bort komenterat för testning
-            # TODO: init_df on iterate_charger eller bara skicka med grads, speed, dists
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
             charge_dict = iterate_charger(charge_dict, route)
             ##soc = 80    # nyladdat batteri

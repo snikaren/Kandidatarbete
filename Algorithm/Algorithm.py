@@ -36,13 +36,11 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
-        try:
-            temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs(best_char['temperature']-293))
-        except:
-            print(best_char)
-        print(abs(best_char['temperature']-293), t_active)
+
+        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs(best_char['temperature']-293))
+
         # Calculate the wanted values
-        best_chargers[best_char['name']] = (best_char['soc charger'], temp_diff)
+        best_chargers[best_char['name']] = (best_char['soc charger'])
         total_time += best_char['charging time'] + best_char['drive time']
         total_driving_time += best_char['drive time']
         total_cost_chargers += best_char['charger cost']
@@ -50,6 +48,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
 
         current_point = best_char['index']
         soc = best_char['soc']
+        print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active/60,2)} minutes before reaching charger")
 
     return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy #, timestops, timecharge?, mer?
 
@@ -58,7 +57,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
     chargers, done = iterate(idx_start, road, soc)
     # Check if reach endpoint at Uppsala
     if done:
-        print("Done with road:",road,", params at end:",chargers)
+        print("Done with road:",road)
         return chargers, True
 
     char_avail = {} 
@@ -88,7 +87,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                 }
             else:
                 char_avail[charger] = {cap: \
-                                       {
+                {
                     'soc_charger': value['soc_charger'],
                     'soc': value['soc'],
                     'availability': predictor.predict(steps=time_steps),
@@ -98,8 +97,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
                     'temp_at_charger': chargers[charger]['temp_at_charger']
-                                        }
-                                       }
+                }
+                }
                                         
                                        
 
@@ -110,17 +109,15 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
         returns a tuple with (id, cost)"""
     profiles = \
         {
-            "time_minimized": (10,1,1),
-            "energy_minimized": (1,10,1),
-            "money_minimized": (1,1,10),
+            "time_minimized": (10,0.1,0.1),
+            "energy_minimized": (0.1,10,0.1),
+            "money_minimized": (0.1,0.1,10),
             "equally_minimized": (1,1,1)
         }
     profile = profiles[profile+"_minimized"]
     time_cost_mult = profile[0]
     energy_cost_mult = profile[1]
     money_cost_mult = profile[2]
-    best_time_charge = 0
-    best_time_drive = 0
     best_charger = 0
     best_charger_cost = 0
     a = numpy_reg()
@@ -160,6 +157,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
 
             # Checks if this is the best charger
             if total_cost < best_charger_cost or best_charger == 0:
+                best_charger_cost = total_cost
                 best_charger = \
                 {
                     'name': charger,
