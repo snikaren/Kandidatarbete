@@ -17,8 +17,8 @@ def Func_el_consum_and_time(soc: float, cap: int, charging_powah) -> tuple[float
 
 def func_soc_cost(soc: float) -> float:
     """ Func that adds a cost if we charge with high soc"""
-    if soc > 25:
-        multiple_cost = soc - 20       # makes charging early bad
+    if soc > 26:
+        multiple_cost = (soc - 20)/ 3      # makes charging early bad
     else:
         multiple_cost = 2
     return soc * multiple_cost

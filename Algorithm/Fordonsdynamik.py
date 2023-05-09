@@ -176,13 +176,15 @@ def battery_temperature_change(idx, soc, battery_temperature):
     h_conv = (N_u*k_air)/l_battery           # H-number
 
     #  Ahads equation but with number of cells is series and divided by time
-    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)
+    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)#*(time_acc(idx)+time_constant_velo(idx))
     Q_exchange = h_conv*l_battery*w_battery*(battery_temperature-t_amb)
     Q_drive = abs(0.05*(energy_acc(idx)+energy_const_velo(idx)))
 
     d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
 
-    return d_T
+    t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)
+ 
+    return d_T, t_active
 
 
 def internal_resistance_battery(battery_temperature):
@@ -241,7 +243,8 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
         soc -= s_o_c_change(index, soc)
         total_distance += (dist_const_velo(index) + dist_acc(index))
         total_time += (time_acc(index) + time_constant_velo(index))
-        battery_temperature += battery_temperature_change(index, soc, battery_temperature)
+        dT, t_active = battery_temperature_change(index, soc, battery_temperature)
+        battery_temperature += dT
 
         params = \
         {
@@ -256,7 +259,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 40:
+        if 20 < soc < 55:
             # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
             # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
     
