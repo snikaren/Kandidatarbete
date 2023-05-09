@@ -219,6 +219,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
     total_energy_consumption = 0
     total_distance = 0
     total_time = 0
+    plot_idx = 0
     charge_dict = {}   
     plot_parameters = \
     {
@@ -243,6 +244,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'time': total_time, 
             'temp': battery_temperature,
             'index': index - 1,
+            'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
         
@@ -252,6 +254,13 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
         total_time += (time_acc(index) + time_constant_velo(index))
         dT, t_active = battery_temperature_change(index, soc, battery_temperature)
         battery_temperature += dT
+        
+        plot_parameters['temp'].append(battery_temperature)
+        plot_parameters['dist'].append(total_distance/1000)
+        plot_parameters['time'].append(total_time/60)
+        plot_parameters['idx'].append(index)
+
+        #print(plot_parameters['idx'])
 
         params = \
         {
@@ -261,6 +270,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'time': total_time, 
             'temp': battery_temperature,
             'index': index,
+            'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
 
@@ -304,6 +314,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
                         'time': total_time, 
                         'temp': battery_temperature,
                         'index': index,
+                        'plot_index': plot_idx,
                         'plot_params': plot_parameters
                         
                     }
@@ -313,13 +324,9 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             charge_dict = iterate_charger(charge_dict, route)
             ##soc = 80    # nyladdat batteri
             return charge_dict, False
-        
-        plot_parameters['temp'].append(battery_temperature)
-        plot_parameters['dist'].append(total_distance)
-        plot_parameters['time'].append(total_time)
-        plot_parameters['idx'].append(index)
 
         index += 1
+        plot_idx += 1
     return params, True
 
 

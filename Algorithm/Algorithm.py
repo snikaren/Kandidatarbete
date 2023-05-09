@@ -55,9 +55,12 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_driving_time += best_char['drive time']
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
+        # Storing plot parameters
         for param in ["idx", "temp", "dist", "time"]:
-            plot_parameters[param] += best_char['plot_params'][param]
+            plot_parameters[param] += best_char['plot_params'][param][:best_char['plot_index']+1]
+        print(best_char['plot_params']['idx'], best_char['plot_params']['idx'][:best_char['plot_index']+1], best_char['index'])
 
+        # Updating cu
         current_point = best_char['index']
         soc = best_char['soc']
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active/60,2)} minutes before reaching charger")
@@ -96,6 +99,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'plot_index': chargers[charger]['plot_index'],
                     'plot_params': chargers[charger]['plot_params']
                 }
             else:
@@ -110,6 +114,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float) -> dict
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'plot_index': chargers[charger]['plot_index'],
                     'plot_params': chargers[charger]['plot_params']
                 }
                 }
@@ -148,6 +153,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             energy_consumption = value['energy_consumption']
             temp_at_charger = value['temp_at_charger']
             plot_parameters = value['plot_params']
+            plot_idx = value['plot_index']
 
             # TODO maybe... lägg till förarprofiler som värderar de olika kostnaderna olika högt?
             ## Kolla kostnad         kr
@@ -185,7 +191,8 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'distance': distance,
                     'energy consumption': energy_consumption,
                     'temperature': temp_at_charger,
-                    'plot_params': plot_parameters
+                    'plot_params': plot_parameters,
+                    'plot_index': plot_idx
                 }
 
 
@@ -193,18 +200,18 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
 
 def plot_routes(plot_params):
     names = ["Route 1", "Route 2", "Route 3"]
-
+    sub_names = ["Temperature [K]", "Distance [Km]", "Time [min]"]
     fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     fig.subplots_adjust(hspace=0.4)
 
     for i in range(len(names)):
         fig.suptitle(names[i])
-        for param in ['temp', 'dist', 'time']:
+        for idx, param in enumerate(['temp', 'dist', 'time']):
             ax = axes[i]
             ax.set_title(param)
             x = plot_params[i]['idx']
             y = plot_params[i][param]
-            ax.plot(x, y, label=param)
+            ax.plot(x, y, label=sub_names[idx])
             ax.legend()
 
     plt.show()
