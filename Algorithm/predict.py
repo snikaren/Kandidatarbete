@@ -32,9 +32,9 @@ def dict_tot() -> dict:
         
     return tot_dict
 
-tot_dict = dict_tot()
 
-def init_state(name: str, capacity: int) -> tuple:
+
+def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
     """ Creates the initial state for a charging station"""
     
     #global tot_dict
@@ -73,10 +73,10 @@ def remove_recursive_points(t_dict: dict) -> dict:
                             t_dict[charger][cap].at[idx_row, col] = 0.9
     return t_dict
 
-def main_pred() -> dict:
+def main_pred(total_dict) -> dict:
     """ a func that returns the dict of all availability of all chargers in info, 
     with recuring points removed"""
-    dt = tot_dict
+    dt = total_dict
     d = {}
     for charger in dt:
         d[charger] = {}

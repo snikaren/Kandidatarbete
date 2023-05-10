@@ -10,6 +10,7 @@ from battery_time_regression import charging_powah
 import matplotlib.pyplot as plt
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
+total_dict = dict_tot()
 
 def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> tuple:
     """ Räknar ut minimala kostnaden för en väg.
@@ -51,7 +52,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
 
-        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temperature']-battery_temp)-293))
+        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+273)-293))
 
         # Calculate the wanted values
         best_chargers[best_char['name']] = (best_char['soc charger'])
@@ -92,7 +93,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
     for charger, value in chargers.items():
         for cap in TMs[charger]:
             # set up for pred
-            state, initial_state = init_state(charger, cap) 
+            state, initial_state = init_state(charger, cap, total_dict) 
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value['time']/60/30)
             predictor = ChargingStationPredictor(state, trans_matrix, initial_state)
@@ -111,6 +112,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
                     'plot_params': chargers[charger]['plot_params']
                 }
@@ -126,6 +128,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'distance': chargers[charger]['distance'],
                     'energy_consumption': chargers[charger]['energy_con'],
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
+                    'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
                     'plot_params': chargers[charger]['plot_params']
                 }
@@ -166,6 +169,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             temp_at_charger = value['temp_at_charger']
             plot_parameters = value['plot_params']
             plot_idx = value['plot_index']
+            temp_iter = value['temp_iter']
 
             # TODO maybe... lägg till förarprofiler som värderar de olika kostnaderna olika högt?
             ## Kolla kostnad         kr
@@ -203,6 +207,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'distance': distance,
                     'energy consumption': energy_consumption,
                     'pred_temp': battery_temp_pred,
+                    'temp_iter': temp_iter,
                     'temperature': temp_at_charger,
                     'plot_params': plot_parameters,
                     'plot_index': plot_idx
@@ -219,13 +224,13 @@ def plot_routes(plot_params):
 
     for i in range(len(names)):
         fig.suptitle("Plot of the routes")
-        for idx, param in enumerate(['dist', 'time']):
+        for idx, param in enumerate(['time']):
             ax = axes[i]
             ax.set_title(names[i])
             ax.set_ylabel("Temperature [K]")
             x = plot_params[i][param]
             y = plot_params[i]['temp']
-            ax.plot(x, y, label=sub_names[idx])
+            ax.plot(x, y, label=sub_names[idx+1])
             ax.legend()
 
     plt.show()
@@ -234,7 +239,7 @@ def plot_routes(plot_params):
 def main():
     """ Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. 
     *Ger även alla laddstationer man stannar vid""" 
-    TMs = main_pred()
+    TMs = main_pred(total_dict)
     profile = input("Which cost do you want to minimize? (time, energy, money), leave empty for equally minimized: ")
     if profile == "":
         profile = "equally"

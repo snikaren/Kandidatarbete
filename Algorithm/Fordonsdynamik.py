@@ -194,29 +194,16 @@ def internal_resistance_battery(battery_temperature):
 
 def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
     """ Func that iterates through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
-    which charging-stations are reachable while not running out of energy (soc<20)
-    charge_dict[name] = 
-        {
-            'energy_con': total_energy_consumption, 
-            'soc_charger': soc_charger,
-            'soc': soc,
-            'distance': total_distance, 
-            'time': total_time, 
-            'temp': battery_temperature,
-            'index': start_idx + 1
-        }
-    """
-    
+    which charging-stations are reachable while not running out of energy (soc<20)"""
 
     init_df(route)
 
-    
     len_df = len(df)
-
 
     # Starting values
     battery_temperature = batt_temp  # Starting with ambient temp of air
     total_energy_consumption = 0
+    temp_iter = 0
     total_distance = 0
     total_time = 0
     plot_idx = 0
@@ -231,8 +218,8 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
     first_trial = True
     prev_soc = 80
     index = idx_start
+
     #  Iterating over road points
-    #for index in range(idx_start, len_df-1):
     while index < len_df-1:
             
         # For every iteration calculate and add each import
@@ -244,6 +231,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
             'time': total_time, 
             'temp': battery_temperature,
             'index': index - 1,
+            'temp_iter': temp_iter,
             'plot_index': plot_idx - 1,
             'plot_params': plot_parameters
         }
@@ -254,13 +242,12 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
         total_time += (time_acc(index) + time_constant_velo(index))
         dT, t_active = battery_temperature_change(index, soc, battery_temperature)
         battery_temperature += dT
+        temp_iter += dT
         
         plot_parameters['temp'].append(battery_temperature)
         plot_parameters['dist'].append(total_distance/1000)
         plot_parameters['time'].append(total_time/60)
         plot_parameters['idx'].append(index)
-
-        #print(plot_parameters['idx'])
 
         params = \
         {
@@ -270,6 +257,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
             'time': total_time, 
             'temp': battery_temperature,
             'index': index,
+            'temp_iter': temp_iter,
             'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
@@ -279,7 +267,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 55:
+        if 20 < soc < 40:
             # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
             # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
     
@@ -314,6 +302,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
                         'time': total_time, 
                         'temp': battery_temperature,
                         'index': index,
+                        'temp_iter': temp_iter,
                         'plot_index': plot_idx,
                         'plot_params': plot_parameters
                         

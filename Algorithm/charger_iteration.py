@@ -211,6 +211,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         battery_temperature = charger['temp']
         plot_parameters = charger['plot_params']
         plot_idx = charger['plot_index']
+        temp_iter = charger['temp_iter']
         batt_temp_at_charger = 0
 
         charger_idx = df_charge.index[df_charge['name']==name].tolist()[0]
@@ -260,6 +261,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             charger_dist += (dist_const_velo(p) + dist_acc(p))
             total_time += (time_acc(p) + time_constant_velo(p))
             battery_temperature += battery_temperature_change(p, soc, battery_temperature)
+            temp_iter += battery_temperature_change(p, soc, battery_temperature)
 
         plot_parameters['temp'].append(battery_temperature)
         plot_parameters['dist'].append(total_distance/1000)
@@ -275,6 +277,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
                 'distance': total_distance, 
                 'time': total_time, 
                 'temp': battery_temperature,
+                'temp_iter': temp_iter,
                 'temp_at_charger': batt_temp_at_charger,
                 'index': start_idx + 1,
                 'highway_dist': charger_dist,
