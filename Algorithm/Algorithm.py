@@ -51,7 +51,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
 
-        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs(best_char['temperature']-293))
+        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temperature']-battery_temp)-293))
 
         # Calculate the wanted values
         best_chargers[best_char['name']] = (best_char['soc charger'])
