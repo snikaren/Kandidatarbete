@@ -192,7 +192,7 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start: int, route: int, soc: float) -> tuple:
+def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
     """ Func that iterates through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
     which charging-stations are reachable while not running out of energy (soc<20)
     charge_dict[name] = 
@@ -215,7 +215,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
 
 
     # Starting values
-    battery_temperature = 274  # Starting with ambient temp of air
+    battery_temperature = batt_temp  # Starting with ambient temp of air
     total_energy_consumption = 0
     total_distance = 0
     total_time = 0
@@ -244,7 +244,7 @@ def iterate(idx_start: int, route: int, soc: float) -> tuple:
             'time': total_time, 
             'temp': battery_temperature,
             'index': index - 1,
-            'plot_index': plot_idx,
+            'plot_index': plot_idx - 1,
             'plot_params': plot_parameters
         }
         
