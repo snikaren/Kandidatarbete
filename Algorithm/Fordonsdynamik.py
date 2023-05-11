@@ -170,7 +170,7 @@ def u_o_c(soc):
 def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, time):
     #  (T2-T1)*cp*m = Qgen + Qexh + Qact
 
-    R_e = (den_air*3*l_battery) / visc_air   # Re-number
+    R_e = (3*l_battery) / visc_air   # Re-number
     N_u = 0.664*R_e**(1/2)*prandtl**(1/3)    # Nu- number, flate plate, laminar flow
     h_conv = (N_u*k_air)/l_battery           # H-number
     t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)
