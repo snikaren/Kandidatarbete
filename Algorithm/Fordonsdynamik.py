@@ -158,8 +158,13 @@ def total_energy(idx):
 
 
 # Change in state of charge
-def s_o_c_change(idx, soc):
-    return total_energy(idx)/(u_o_c(soc)*200*3600)
+def s_o_c_change(idx, soc, battery_temp):
+    Q_loss = internal_resistance_battery(battery_temp)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)*(time_acc(idx)+time_constant_velo(idx))
+    Q_cooling = HVCH_power*(time_acc(idx) + time_constant_velo(idx))/eta_HVCH
+    if battery_temp > 21:
+        return (Q_loss+total_energy(idx))/(u_o_c(soc)*200*3600)
+    else:
+        return (Q_loss+total_energy(idx))/(u_o_c(soc)*200*3600)
 
 
 # Open circuit voltage for the battery
@@ -181,9 +186,7 @@ def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, 
     Q_drive = abs(0.03*(energy_acc(idx)+energy_const_velo(idx))) 
     Q_cooling = HVCH_power*(time_acc(idx) + time_constant_velo(idx))*eta_HVCH
 
-    if battery_temperature > 273+35:
-        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
-    elif battery_temperature > 273+15 and time < t_active_charger+100:
+    if battery_temperature > 273+21:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
     else:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
@@ -246,7 +249,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
 
         
         total_energy_consumption += total_energy(index)
-        soc -= s_o_c_change(index, soc)
+        soc -= s_o_c_change(index, soc, battery_temperature)
         total_distance += (dist_const_velo(index) + dist_acc(index))
         total_time += (time_acc(index) + time_constant_velo(index))
         dT, t_active = battery_temperature_change(index, soc, battery_temperature, t_active_charger, total_time)
@@ -275,7 +278,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 40:
+        if 20 < soc < 55:
             # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
             # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
     

@@ -224,9 +224,9 @@ def plot_routes(plot_params):
             ax = axes[i]
             ax.set_title(names[i])
             ax.set_ylabel("Temperature [K]")
-            x = plot_params[i][param]
-            y = plot_params[i]['temp']
-            ax.plot(x, y, label=sub_names[idx])
+            x = plot_params[i]['idx']
+            y = plot_params[i][param]
+            ax.scatter(x, y, label=sub_names[idx])
             ax.legend()
 
     plt.show()
