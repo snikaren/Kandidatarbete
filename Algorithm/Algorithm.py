@@ -1,5 +1,4 @@
 from predict import main_pred, init_state, ChargingStationPredictor, dict_tot
-#from predict import *
 from Fordonsdynamik import iterate, battery_temperature_change
 from Konstanter import *
 from cost import *
@@ -8,7 +7,6 @@ import pandas as pd
 from cost_regression import numpy_reg
 from battery_time_regression import charging_powah
 import matplotlib.pyplot as plt
-import json
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
@@ -173,7 +171,6 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             plot_idx = value['plot_index']
             temp_iter = value['temp_iter']
 
-            # TODO maybe... lägg till förarprofiler som värderar de olika kostnaderna olika högt?
             ## Kolla kostnad         kr
             cost_el = Func_price_from_capa(cap, a)     # Löser sen /jakob_henrik
             tot_el, time_charge, battery_temp_pred = Func_el_consum_and_time(soc_charger, cap, charging_power)      # Hampus gör idag 24/4
@@ -265,14 +262,9 @@ def main():
             best_road_idx = i
     print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
     plot_routes(plot_parameters)
-    print(plot_parameters[2]['idx'])
     return roads[best_road_idx], min_cost
 
-
-def testing_func():
-    TMs = main_pred()
-
-
 if __name__ == "__main__":
-    print(main())
+    m = main()
+    print(f"Best route: {m[0]} with cost: {m[1][0]}")
     #testing_func()

@@ -8,31 +8,41 @@ import random
 def dict_tot() -> dict:
     """ Returns a dictonary for the charching stations containing the availability over the measured period"""
 
-    # Går igenom alla chargers i info
-    
-    tot_dict = {}
+    tot_dict = {}  # Initialize an empty dictionary
+
+    # Open and load the 'Info.json' file
     with open(r'Algorithm\Info.json') as f:
         info = json.load(f)
 
+    # Open and load the 'avail2023-03-13_16-43-55.json' file
     with open(r'Algorithm/avail2023-03-13_16-43-55.json') as f2:
         avail = json.load(f2)
 
+    # Iterate over each charger in the 'info' JSON data
     for charger in info:
-        charger_name = charger['charger']
-        tot_dict[charger_name] = {}
+        charger_name = charger['charger']  # Get the name of the charger
+        tot_dict[charger_name] = {}  # Create an empty dictionary for the charger
+
+        # Extract the capacities from 'total_chargers' for the current charger
         capacitites = [i["capacity"] for i in charger["total_chargers"]]
-        for idx, cap in enumerate(capacitites):  
-            try:                   
+
+        # Iterate over each capacity and its corresponding index
+        for idx, cap in enumerate(capacitites):
+            try:
+                # Iterate over each entry in 'avail' for the current charger
                 for k in range(len(avail[charger_name])):
+                    # Check if the length of the availability matches the number of capacities
                     if len(avail[charger_name][k][1]) == len(capacitites):
-                        av = avail[charger_name][k][1][idx]
-                        total_avail = int(av)
+                        av = avail[charger_name][k][1][idx]  # Get the availability value
+                        total_avail = int(av)  # Convert availability to an integer
+
+                        # Check if the capacity exists in the charger's dictionary
                         if cap in tot_dict[charger_name].keys():
                             tot_dict[charger_name][cap].append(total_avail)
                         else:
                             tot_dict[charger_name][cap] = [total_avail]
             except:
-                pass
+                pass  # Ignore any exceptions that occur during the processing
     
 
     return tot_dict
@@ -66,18 +76,8 @@ def tm_one_charger(charger_dict: dict): # -> DataFrame
 
 def remove_recursive_points(t_dict: dict) -> dict:
     """ Func that checks if a matrix has a recursive point, 
-    and changes that column to have a 10% chance to reference another value"""
-    """
-    for charger, caps in t_dict.items():
-        for cap, t in caps.items():
-            if len(t) > 1:
-                for idx_row, row in t.iterrows():     # i for each row
-                    for idx_col, col in enumerate(t.columns):
-                        if row.iloc[idx_col] == 1:
-                            r = random.choice([i for i in t.index if i != row.name])
-                            t_dict[charger][cap].at[r, col] = 0.1
-                            t_dict[charger][cap].at[idx_row, col] = 0.9
-    """
+    and changes that column to have a 10% chance to reference another random value"""
+
     for charger, caps in t_dict.items():
         for cap, t in caps.items():
             if len(t) > 1:
