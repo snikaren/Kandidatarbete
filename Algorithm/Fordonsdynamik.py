@@ -167,22 +167,28 @@ def u_o_c(soc):
     #  KANSKE ÄNDRA DENNA FUNCTION
     return (soc * 5.83 * (10**-3) + 3.43)
 
-
-def battery_temperature_change(idx, soc, battery_temperature):
+def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, time):
     #  (T2-T1)*cp*m = Qgen + Qexh + Qact
 
-    R_e = (den_air*2*l_battery) / visc_air   # Re-number
+    R_e = (den_air*3*l_battery) / visc_air   # Re-number
     N_u = 0.664*R_e**(1/2)*prandtl**(1/3)    # Nu- number, flate plate, laminar flow
     h_conv = (N_u*k_air)/l_battery           # H-number
+    t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)
 
     #  Ahads equation but with number of cells is series and divided by time
     Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)*(time_acc(idx)+time_constant_velo(idx))
-    Q_exchange = h_conv*l_battery*w_battery*(battery_temperature-t_amb)
-    Q_drive = abs(0.05*(energy_acc(idx)+energy_const_velo(idx)))
+    Q_exchange = 2*h_conv*l_battery*w_battery*(battery_temperature-t_amb)
+    Q_drive = abs(0.03*(energy_acc(idx)+energy_const_velo(idx))) 
+    Q_cooling = HVCH_power*(time_acc(idx) + time_constant_velo(idx))*eta_HVCH
 
-    d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
+    if battery_temperature > 273+35:
+        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
+    elif battery_temperature > 273+15 and time < t_active_charger+500:
+        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
+    else:
+        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
 
-    t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)
+    
 
     return d_T, t_active
 
@@ -192,7 +198,7 @@ def internal_resistance_battery(battery_temperature):
 
 
 
-def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
+def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_charger: float) -> tuple:
     """ Func that iterates through the index-points. Calculates the energy consumed, distance moved, timechange, SOC and 
     which charging-stations are reachable while not running out of energy (soc<20)"""
 
@@ -240,7 +246,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float) -> tuple:
         soc -= s_o_c_change(index, soc)
         total_distance += (dist_const_velo(index) + dist_acc(index))
         total_time += (time_acc(index) + time_constant_velo(index))
-        dT, t_active = battery_temperature_change(index, soc, battery_temperature)
+        dT, t_active = battery_temperature_change(index, soc, battery_temperature, t_active_charger, total_time)
         battery_temperature += dT
         temp_iter += dT
         

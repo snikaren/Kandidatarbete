@@ -19,6 +19,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     total_cost_chargers = 0
     battery_temp = 274.0
     total_time = 0
+    t_active_charger = 0
     total_energy = 0
     soc = 100 * max_battery/Battery_joules
     total_driving_time = 0
@@ -33,7 +34,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     while True:
         
         # Simuluera fram tills vi måste ladda, hämtar laddare i området, och ger parametrarna för dessa
-        char_avail, done = get_chargers_avail(current_point, road, TMs, soc, battery_temp)
+        char_avail, done = get_chargers_avail(current_point, road, TMs, soc, battery_temp, t_active_charger)
 
         # Check if we reached end point
         if done:
@@ -44,7 +45,8 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
             final_soc = char_avail['soc']
             for param in ["idx", "temp", "dist", "time"]:
                 if param == "dist" or param == "time":
-                    plot_parameters[param] += [i + plot_parameters[param][-1] for i in char_avail['plot_params'][param]]
+                    plot_parameters[param] += [i + plot_parameters[param][-
+                                                                          1] for i in char_avail['plot_params'][param]]
                 else:
                     plot_parameters[param] += char_avail['plot_params'][param]
             break
@@ -52,10 +54,10 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
 
-        temp_diff, t_active = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+273)-293))
+        temp_diff, t_active_charger = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+float(best_char['pred_temp'])+273)-293), t_active_charger, total_time)
 
         # Calculate the wanted values
-        best_chargers[best_char['name']] = (best_char['soc charger'])
+        best_chargers[best_char['name']] = f"{round(best_char['soc charger'],1)}%"
         total_time += best_char['charging time'] + best_char['drive time']
         total_driving_time += best_char['drive time']
         total_cost_chargers += best_char['charger cost']
@@ -75,14 +77,14 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         # Updating current parameters
         current_point = best_char['index']
         soc = best_char['soc']
-        battery_temp = best_char['temperature']
-        print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active/60,2)} minutes before reaching charger")
+        battery_temp = best_char['temperature']+float(best_char['pred_temp'])
+        print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active_charger/60,2)} minutes before reaching charger")
 
     return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters #, timestops, timecharge?, mer?
 
-def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_temp: float) -> dict:
+def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_temp: float, t_active_charger: float) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
-    chargers, done = iterate(idx_start, road, soc, batt_temp)
+    chargers, done = iterate(idx_start, road, soc, batt_temp, t_active_charger)
     # Check if reach endpoint at Uppsala
     if done:
         print("Done with road:",road)
@@ -205,7 +207,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'index': index,
                     'distance': distance,
                     'energy consumption': energy_consumption,
-                    'pred_temp': battery_temp_pred,
+                    'pred_temp': battery_temp_pred-20,
                     'temp_iter': temp_iter,
                     'temperature': temp_at_charger,
                     'plot_params': plot_parameters,
