@@ -61,18 +61,15 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_driving_time += best_char['drive time']
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
-        # Storing plot parameters
 
+        # Storing plot parameters
         for param in ["idx", "temp", "dist", "time"]:
             if param == "dist" or param == "time":
                 plot_parameters[param] += [i + plot_parameters[param][-1] if plot_parameters[param] != [] else i for i in best_char['plot_params'][param]]
             else:
                 plot_parameters[param] += best_char['plot_params'][param]
 
-        #plot_parameters['time'][-1] += best_char['charging time']
         plot_parameters['temp'][-1] += best_char['pred_temp']
-        print(plot_parameters['dist'], best_char['distance']/1000)
-        #print(best_char['plot_params']['idx'], best_char['plot_params']['idx'][:best_char['plot_index']+1], best_char['index'])
 
         # Updating current parameters
         current_point = best_char['index']
