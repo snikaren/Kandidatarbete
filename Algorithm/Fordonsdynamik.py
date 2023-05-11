@@ -183,7 +183,7 @@ def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, 
 
     if battery_temperature > 273+35:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
-    elif battery_temperature > 273+15 and time < t_active_charger+500:
+    elif battery_temperature > 273+15 and time < t_active_charger:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
     else:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
@@ -227,8 +227,9 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
 
     #  Iterating over road points
     while index < len_df-1:
-            
+        
         # For every iteration calculate and add each import
+        
         prev_values = \
         {
             'energy_con': total_energy_consumption, 
@@ -236,11 +237,13 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
             'distance': total_distance, 
             'time': total_time, 
             'temp': battery_temperature,
-            'index': index - 1,
+            'index': index,
             'temp_iter': temp_iter,
-            'plot_index': plot_idx - 1,
+            'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
+
+
         
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc)
@@ -254,7 +257,6 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         plot_parameters['dist'].append(total_distance/1000)
         plot_parameters['time'].append(total_time/60)
         plot_parameters['idx'].append(index)
-
         params = \
         {
             'energy_con': total_energy_consumption, 
@@ -316,9 +318,10 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
                     
         elif soc < 20:
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
-            charge_dict = iterate_charger(charge_dict, route)
+            charge_dict_new = iterate_charger(charge_dict, route)
+            print(charge_dict_new)
             ##soc = 80    # nyladdat batteri
-            return charge_dict, False
+            return charge_dict_new, False
 
         index += 1
         plot_idx += 1

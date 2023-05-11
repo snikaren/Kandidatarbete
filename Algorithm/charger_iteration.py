@@ -209,11 +209,11 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         total_energy_consumption = charger['energy_con']
         total_distance = charger['distance']
         battery_temperature = charger['temp']
-        plot_parameters = charger['plot_params']
+        plot_params = charger['plot_params']
+        #print(plot_parameters['idx'], start_idx)
         plot_idx = charger['plot_index']
         temp_iter = charger['temp_iter']
         batt_temp_at_charger = 0
-
         charger_idx = df_charge.index[df_charge['name']==name].tolist()[0]
 
         # 1: start_idx -> nearest_highway (räkna ut dist som kommer vara starting distance (total_distance))
@@ -248,7 +248,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             "current_gradient": float(Current_pd(charger_grads_next, charger_idx)), #finns det någon för highway? annars ta samma som på vägen
             "dist_to_next_point": float(Current_pd(dist_from_highway_to_next, charger_idx))
         }
-        total_distance = dist_from_highway_to_prev[charger_idx] #Starting distance
+        #total_distance = dist_from_highway_to_prev[charger_idx] #Starting distance
 
         for p in [p0, p1, p2, p3]:
             total_energy_consumption = total_energy_consumption + total_energy(p) 
@@ -262,12 +262,15 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             total_time += (time_acc(p) + time_constant_velo(p))
             battery_temperature += battery_temperature_change(p, soc, battery_temperature)
             temp_iter += battery_temperature_change(p, soc, battery_temperature)
-
-        plot_parameters['temp'].append(battery_temperature)
-        plot_parameters['dist'].append(total_distance/1000)
-        plot_parameters['time'].append(total_time/60)
-        plot_parameters['idx'].append(start_idx + 1)
-
+        
+        for param in ["idx", "temp", "dist", "time"]:
+            plot_params[param] = plot_params[param][:plot_idx]
+        
+        plot_params['temp'].append(battery_temperature)
+        plot_params['dist'].append(total_distance/1000)
+        plot_params['time'].append(total_time/60)
+        plot_params['idx'].append(start_idx)
+        #print(plot_parameters['dist'], total_distance/1000)
         if soc_at_charger > 20:
             charge_dict[name] = \
             {
@@ -282,10 +285,10 @@ def iterate_charger(chargers: dict, route: int) -> dict:
                 'index': start_idx + 1,
                 'highway_dist': charger_dist,
                 'plot_index': plot_idx,
-                'plot_params': plot_parameters
+                'plot_params': plot_params
             }
 
-
+        print(plot_params['dist'], total_distance/1000)
     return charge_dict
 
 

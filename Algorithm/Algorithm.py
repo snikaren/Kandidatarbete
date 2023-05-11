@@ -45,8 +45,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
             final_soc = char_avail['soc']
             for param in ["idx", "temp", "dist", "time"]:
                 if param == "dist" or param == "time":
-                    plot_parameters[param] += [i + plot_parameters[param][-
-                                                                          1] for i in char_avail['plot_params'][param]]
+                    plot_parameters[param] += [i + plot_parameters[param][-1] for i in char_avail['plot_params'][param]]
                 else:
                     plot_parameters[param] += char_avail['plot_params'][param]
             break
@@ -63,15 +62,16 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
         # Storing plot parameters
+        #print(best_char['plot_params']['dist'], best_char['distance']/1000)
         for param in ["idx", "temp", "dist", "time"]:
             if param == "dist" or param == "time":
-                plot_parameters[param] += [i + plot_parameters[param][-1] if plot_parameters[param] != [] else i for i in best_char['plot_params'][param][:best_char['plot_index']+1]]
+                plot_parameters[param] += [i + plot_parameters[param][-1] if plot_parameters[param] != [] else i for i in best_char['plot_params'][param]]
             else:
-                plot_parameters[param] += best_char['plot_params'][param][:best_char['plot_index']+1]
-        
+                plot_parameters[param] += best_char['plot_params'][param]
+
         #plot_parameters['time'][-1] += best_char['charging time']
         plot_parameters['temp'][-1] += best_char['pred_temp']
-        
+        #print(plot_parameters['dist'], best_char['distance']/1000)
         #print(best_char['plot_params']['idx'], best_char['plot_params']['idx'][:best_char['plot_index']+1], best_char['index'])
 
         # Updating current parameters
@@ -135,8 +135,6 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'plot_params': chargers[charger]['plot_params']
                 }
                 }
-                                        
-                                       
 
     return char_avail, False
 
@@ -225,13 +223,13 @@ def plot_routes(plot_params):
 
     for i in range(len(names)):
         fig.suptitle("Plot of the routes")
-        for idx, param in enumerate(['time']):
+        for idx, param in enumerate(['dist','time']):
             ax = axes[i]
             ax.set_title(names[i])
             ax.set_ylabel("Temperature [K]")
             x = plot_params[i][param]
             y = plot_params[i]['temp']
-            ax.plot(x, y, label=sub_names[idx+1])
+            ax.plot(x, y, label=sub_names[idx])
             ax.legend()
 
     plt.show()
