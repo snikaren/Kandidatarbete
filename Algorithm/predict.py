@@ -7,12 +7,16 @@ import random
 
 def dict_tot() -> dict:
     """ Returns a dictonary for the charching stations containing the availability over the measured period"""
-    f = open(r'Algorithm\Info.json')
-    f2 = open(r'Algorithm/avail2023-03-13_16-43-55.json')
-    info = json.load(f)
-    avail = json.load(f2)
-    tot_dict = {}
+
     # Går igenom alla chargers i info
+    
+    tot_dict = {}
+    with open(r'Algorithm\Info.json') as f:
+        info = json.load(f)
+
+    with open(r'Algorithm/avail2023-03-13_16-43-55.json') as f2:
+        avail = json.load(f2)
+
     for charger in info:
         charger_name = charger['charger']
         tot_dict[charger_name] = {}
@@ -29,7 +33,8 @@ def dict_tot() -> dict:
                             tot_dict[charger_name][cap] = [total_avail]
             except:
                 pass
-        
+    
+
     return tot_dict
 
 
@@ -39,7 +44,7 @@ def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
     
     #global tot_dict
     # create a pandas series
-    my_series = pd.Series(tot_dict[name][capacity])
+    my_series = pd.Series(tot_dict[name][capacity], dtype='float64')
 
     # get the count of occurrences of each unique value
     value_counts = my_series.value_counts(sort=True)
@@ -54,14 +59,15 @@ def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
 # https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
 def tm_one_charger(charger_dict: dict): # -> DataFrame
     """ Returns the tranition matrix, for a given charging station """
-    trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next'),
-                        pd.Series(charger_dict[:-1],name='Current'),normalize=1)
+    trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next',dtype='float64'),
+                        pd.Series(charger_dict[:-1],name='Current',dtype='float64'),normalize=1)
 
     return trans
 
 def remove_recursive_points(t_dict: dict) -> dict:
     """ Func that checks if a matrix has a recursive point, 
     and changes that column to have a 10% chance to reference another value"""
+    """
     for charger, caps in t_dict.items():
         for cap, t in caps.items():
             if len(t) > 1:
@@ -71,6 +77,15 @@ def remove_recursive_points(t_dict: dict) -> dict:
                             r = random.choice([i for i in t.index if i != row.name])
                             t_dict[charger][cap].at[r, col] = 0.1
                             t_dict[charger][cap].at[idx_row, col] = 0.9
+    """
+    for charger, caps in t_dict.items():
+        for cap, t in caps.items():
+            if len(t) > 1:
+                rows_to_update = t.index[t.eq(1).any(axis=1)]  # Get rows with at least one value of 1
+                if len(rows_to_update) > 0:
+                    r = random.choice(rows_to_update)
+                    t.loc[r] = 0.1  # Set the selected row to 0.1 for all columns
+                    t.loc[t.index != r] = 0.9  # Set other rows to 0.9 for all columns
     return t_dict
 
 def main_pred(total_dict) -> dict:

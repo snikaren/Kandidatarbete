@@ -8,8 +8,10 @@ import pandas as pd
 from cost_regression import numpy_reg
 from battery_time_regression import charging_powah
 import matplotlib.pyplot as plt
+import json
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
+
 total_dict = dict_tot()
 
 def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> tuple:
@@ -72,7 +74,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         
         #print(best_char['plot_params']['idx'], best_char['plot_params']['idx'][:best_char['plot_index']+1], best_char['index'])
 
-        # Updating cu
+        # Updating current parameters
         current_point = best_char['index']
         soc = best_char['soc']
         battery_temp = best_char['temperature']
@@ -249,7 +251,7 @@ def main():
     total_energy = [0,0,0]
     final_socs = [0,0,0]
     plot_parameters = [0,0,0]
-    chargersList = [{}, {}, {}]
+    chargersList = [None,None,None]
     time_cost = 10  #ger bara ett nummer för tester
     min_cost, chargersList[0], total_road_time[0], final_socs[0], total_energy[0], plot_parameters[0] = minimize_road_cost(roads[0], TMs, time_cost, profile)       # returns the cost of choosing that road
     costs[0] = min_cost
@@ -261,7 +263,7 @@ def main():
         if tot_cost < min_cost:
             min_cost = tot_cost
             best_road_idx = i
-    print(f"Minimum cost: {min_cost}, \n Charger list:\n {chargersList[0]} \n {chargersList[1]} \n {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
+    print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
     plot_routes(plot_parameters)
     print(plot_parameters[2]['idx'])
     return roads[best_road_idx], min_cost
