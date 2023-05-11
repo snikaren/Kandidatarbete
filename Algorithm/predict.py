@@ -47,8 +47,6 @@ def dict_tot() -> dict:
 
     return tot_dict
 
-
-
 def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
     """ Creates the initial state for a charging station"""
     
@@ -65,8 +63,6 @@ def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
 
     return df['Value'], df['procent']
 
-
-# https://stackoverflow.com/questions/47297585/building-a-transition-matrix-using-words-in-python-numpy
 def tm_one_charger(charger_dict: dict): # -> DataFrame
     """ Returns the tranition matrix, for a given charging station """
     trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next',dtype='float64'),

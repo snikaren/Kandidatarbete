@@ -52,7 +52,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
-
+        best_char['plot_params']['time'].append((best_char['charging time']+best_char['drive time'])/60)
         temp_diff, t_active_charger = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+float(best_char['pred_temp'])+273)-293), t_active_charger, total_time)
 
         # Calculate the wanted values
@@ -62,7 +62,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
         # Storing plot parameters
-        #print(best_char['plot_params']['dist'], best_char['distance']/1000)
+
         for param in ["idx", "temp", "dist", "time"]:
             if param == "dist" or param == "time":
                 plot_parameters[param] += [i + plot_parameters[param][-1] if plot_parameters[param] != [] else i for i in best_char['plot_params'][param]]
@@ -71,7 +71,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
 
         #plot_parameters['time'][-1] += best_char['charging time']
         plot_parameters['temp'][-1] += best_char['pred_temp']
-        #print(plot_parameters['dist'], best_char['distance']/1000)
+        print(plot_parameters['dist'], best_char['distance']/1000)
         #print(best_char['plot_params']['idx'], best_char['plot_params']['idx'][:best_char['plot_index']+1], best_char['index'])
 
         # Updating current parameters

@@ -209,7 +209,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         total_energy_consumption = charger['energy_con']
         total_distance = charger['distance']
         battery_temperature = charger['temp']
-        plot_params = charger['plot_params']
+        plot_params = charger['plot_params'].copy()
         #print(plot_parameters['idx'], start_idx)
         plot_idx = charger['plot_index']
         temp_iter = charger['temp_iter']
@@ -265,11 +265,12 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         
         for param in ["idx", "temp", "dist", "time"]:
             plot_params[param] = plot_params[param][:plot_idx]
-        
-        plot_params['temp'].append(battery_temperature)
-        plot_params['dist'].append(total_distance/1000)
-        plot_params['time'].append(total_time/60)
-        plot_params['idx'].append(start_idx)
+            plot_params['time'].append(total_time/60)
+        for _ in range(2):
+            plot_params['temp'].append(battery_temperature)
+            plot_params['dist'].append(total_distance/1000)
+            plot_params['idx'].append(start_idx)
+
         #print(plot_parameters['dist'], total_distance/1000)
         if soc_at_charger > 20:
             charge_dict[name] = \
@@ -288,7 +289,6 @@ def iterate_charger(chargers: dict, route: int) -> dict:
                 'plot_params': plot_params
             }
 
-        print(plot_params['dist'], total_distance/1000)
     return charge_dict
 
 

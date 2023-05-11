@@ -183,7 +183,7 @@ def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, 
 
     if battery_temperature > 273+35:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
-    elif battery_temperature > 273+15 and time < t_active_charger:
+    elif battery_temperature > 273+15 and time < t_active_charger+100000:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
     else:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
@@ -319,7 +319,6 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         elif soc < 20:
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
             charge_dict_new = iterate_charger(charge_dict, route)
-            print(charge_dict_new)
             ##soc = 80    # nyladdat batteri
             return charge_dict_new, False
 
