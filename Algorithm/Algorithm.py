@@ -7,6 +7,7 @@ import pandas as pd
 from cost_regression import numpy_reg
 from battery_time_regression import charging_powah
 import matplotlib.pyplot as plt
+import time
 
 df = pd.read_csv(r'Algorithm\excel\chargers.csv')
 
@@ -43,11 +44,15 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
             total_energy = char_avail['energy_con'] + total_energy
             total_cost = total_cost_chargers + total_time * time_cost * profil[0] + total_energy/3600000 * profil[1]
             final_soc = char_avail['soc']
-            for param in ["idx", "temp", "dist", "time"]:
-                if param == "dist" or param == "time":
-                    plot_parameters[param] += [i + plot_parameters[param][-1] for i in char_avail['plot_params'][param]]
-                else:
-                    plot_parameters[param] += char_avail['plot_params'][param]
+
+            dist_values = char_avail['plot_params']['dist']
+            time_values = char_avail['plot_params']['time']
+
+            plot_parameters['dist'] += [i + plot_parameters['dist'][-1] for i in dist_values]
+            plot_parameters['time'] += [i + plot_parameters['time'][-1] for i in time_values]
+
+            for param in ["idx", "temp"]:
+                plot_parameters[param] += char_avail['plot_params'][param]
             break
         
         # Välj den bästa laddaren
@@ -63,12 +68,16 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_energy += best_char['energy consumption']
 
         # Storing plot parameters
-        for param in ["idx", "temp", "dist", "time"]:
-            if param == "dist" or param == "time":
-                plot_parameters[param] += [i + plot_parameters[param][-1] if plot_parameters[param] != [] else i for i in best_char['plot_params'][param]]
-            else:
-                plot_parameters[param] += best_char['plot_params'][param]
 
+        dist_values = best_char['plot_params']['dist']
+        time_values = best_char['plot_params']['time']
+
+        plot_parameters['dist'] += [i + plot_parameters['dist'][-1] if plot_parameters['dist'] != [] else i for i in dist_values]
+        plot_parameters['time'] += [i + plot_parameters['time'][-1] if plot_parameters['time'] != [] else i for i in time_values]
+
+        for param in ["idx", "temp"]:
+            plot_parameters[param] += best_char['plot_params'][param]
+        
         plot_parameters['temp'][-1] += best_char['pred_temp']
 
         # Updating current parameters
@@ -224,9 +233,10 @@ def plot_routes(plot_params):
             ax = axes[i]
             ax.set_title(names[i])
             ax.set_ylabel("Temperature [K]")
+            ax.axhline(294,color='black',ls='--')
             x = plot_params[i]['idx']
-            y = plot_params[i][param]
-            ax.scatter(x, y, label=sub_names[idx])
+            y = plot_params[i]['temp']
+            ax.plot(x, y, label=sub_names[idx])
             ax.legend()
 
     plt.show()
@@ -235,6 +245,8 @@ def plot_routes(plot_params):
 def main():
     """ Huvudfunc, kör igenom alla vägar, och returnerar bästa väg utifrån kostnad. 
     *Ger även alla laddstationer man stannar vid""" 
+    start_time = time.time()
+
     TMs = main_pred(total_dict)
     profile = input("Which cost do you want to minimize? (time, energy, money), leave empty for equally minimized: ")
     if profile == "":
@@ -258,7 +270,9 @@ def main():
             min_cost = tot_cost
             best_road_idx = i
     print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
+    print("--- %s seconds ---" % (time.time() - start_time))
     plot_routes(plot_parameters)
+    
     return roads[best_road_idx], min_cost
 
 if __name__ == "__main__":

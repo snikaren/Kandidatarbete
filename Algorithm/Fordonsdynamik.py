@@ -186,7 +186,7 @@ def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, 
     Q_drive = abs(0.03*(energy_acc(idx)+energy_const_velo(idx))) 
     Q_cooling = HVCH_power*(time_acc(idx) + time_constant_velo(idx))*eta_HVCH
 
-    if battery_temperature > 273+21:
+    if battery_temperature > 293: # Over 21 Celsius?
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
     else:
         d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
@@ -278,7 +278,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 55:
+        if 20 < soc < 40:
             # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
             # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
     
