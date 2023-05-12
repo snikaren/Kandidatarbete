@@ -154,7 +154,7 @@ def time(init_soc,final_soc,charging_powah,soc_value,charger,battery_temperature
     p = np.polyfit(charge_power, time_to_charge,5)
     return(predicted_energy,np.polyval(p,charger),predicted_temp)
 
-def main(soc: float, cap: int, charging_powah) -> tuple:
+def main(soc: float, cap: int, charging_powah, battery_temp) -> tuple:
 
 
 
@@ -167,7 +167,7 @@ def main(soc: float, cap: int, charging_powah) -> tuple:
     if charger > 250:
         charger = 250
 
-    batteritemp = 293.15
+    batteritemp = battery_temp
 
     #Spotta ut tiden
     time_to_charge = time(init_soc,final_soc,charging_powah,soc_value,charger,batteritemp)

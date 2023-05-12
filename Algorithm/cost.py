@@ -10,9 +10,9 @@ def Func_price_from_capa(cap: int, a) -> float:
     cost = predict(a, cap)
     return cost*multiple
 
-def Func_el_consum_and_time(soc: float, cap: int, charging_powah) -> tuple[float, float]:
+def Func_el_consum_and_time(soc: float, cap: int, charging_powah, battery_temp) -> tuple[float, float]:
     """ Func that calculates the energy and time needed to charge a battery, given its capacity and the SOC of the car"""
-    tot_charge, time_charge, battery_temp = main(soc, cap, charging_powah)
+    tot_charge, time_charge, battery_temp = main(soc, cap, charging_powah, battery_temp)
     return tot_charge[0], time_charge*3600, battery_temp
 
 def func_soc_cost(soc: float) -> float:
@@ -27,6 +27,7 @@ def get_avail_value(avail: list, state: list) -> tuple[float, float]:
     """ Func that given a avail_list and a state_list, calculates the availability in procent and total numerical chargers"""
     tot_char_avail = 0
     for i in range(len(avail)):
+        #print(avail)
         tot_char_avail += avail[i]*state[i]
 
     # A try/except filter to remove warnings that occour from tot_avail or state[x] being NaN or = 0

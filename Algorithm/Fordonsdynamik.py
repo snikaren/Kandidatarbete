@@ -161,10 +161,8 @@ def total_energy(idx):
 def s_o_c_change(idx, soc, battery_temp):
     Q_loss = internal_resistance_battery(battery_temp)*((total_energy(idx)/(u_o_c(soc)*(time_acc(idx)+time_constant_velo(idx))*cells_in_series))**2)*(time_acc(idx)+time_constant_velo(idx))
     Q_cooling = HVCH_power*(time_acc(idx) + time_constant_velo(idx))/eta_HVCH
-    if battery_temp > 21:
-        return (Q_loss+total_energy(idx))/(u_o_c(soc)*200*3600)
-    else:
-        return (Q_loss+total_energy(idx))/(u_o_c(soc)*200*3600)
+
+    return (Q_loss+total_energy(idx))/(u_o_c(soc)*200*3600)
 
 
 # Open circuit voltage for the battery
@@ -175,7 +173,7 @@ def u_o_c(soc):
 def battery_temperature_change(idx, soc, battery_temperature, t_active_charger, time):
     #  (T2-T1)*cp*m = Qgen + Qexh + Qact
 
-    R_e = (3*l_battery) / visc_air   # Re-number
+    R_e = (2*l_battery) / visc_air   # Re-number
     N_u = 0.664*R_e**(1/2)*prandtl**(1/3)    # Nu- number, flate plate, laminar flow
     h_conv = (N_u*k_air)/l_battery           # H-number
     t_active = cp_battery * mass_battery * battery_temperature / (HVCH_power * eta_HVCH)

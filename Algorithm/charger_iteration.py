@@ -176,16 +176,20 @@ def u_o_c(soc):
 def battery_temperature_change(point, soc, battery_temperature):
     #  (T2-T1)*cp*m = Qgen + Qexh + Qact
 
-    R_e = (den_air*2*l_battery) / visc_air   # Re-number
+    R_e = (2*l_battery) / visc_air   # Re-number
     N_u = 0.664*R_e**(1/2)*prandtl**(1/3)    # Nu- number, flate plate, laminar flow
     h_conv = (N_u*k_air)/l_battery             # H-number
 
     #  Ahads equation but with number of cells is series and divided by time
-    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(point)/(u_o_c(soc)*(time_acc(point)+time_constant_velo(point))*cells_in_series))**2)
-    Q_exchange = h_conv*l_battery*w_battery*(battery_temperature-t_amb)
-    Q_drive = abs(0.05*(energy_acc(point)+energy_const_velo(point)))
+    Q_loss = internal_resistance_battery(battery_temperature)*((total_energy(point)/(u_o_c(soc)*(time_acc(point)+time_constant_velo(point))*cells_in_series))**2)*(time_acc(point)+time_constant_velo(point))
+    Q_exchange = 2*h_conv*l_battery*w_battery*(battery_temperature-t_amb)
+    Q_drive = abs(0.03*(energy_acc(point)+energy_const_velo(point)))
+    Q_cooling = HVCH_power*(time_acc(point) + time_constant_velo(point))*eta_HVCH
 
-    d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
+    if battery_temperature > 293: # Over 21 Celsius?
+        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive - Q_cooling)
+    else:
+        d_T = (1/(cp_battery*mass_battery))*(-Q_exchange + Q_loss + Q_drive)
 
     return d_T
 

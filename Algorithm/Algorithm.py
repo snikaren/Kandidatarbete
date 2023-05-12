@@ -18,7 +18,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
     total_cost_chargers = 0
-    battery_temp = 274.0
+    battery_temp = 273.15+10
     total_time = 0
     t_active_charger = 0
     total_energy = 0
@@ -71,19 +71,18 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
 
         dist_values = best_char['plot_params']['dist']
         time_values = best_char['plot_params']['time']
-
         plot_parameters['dist'] += [i + plot_parameters['dist'][-1] if plot_parameters['dist'] != [] else i for i in dist_values]
         plot_parameters['time'] += [i + plot_parameters['time'][-1] if plot_parameters['time'] != [] else i for i in time_values]
 
         for param in ["idx", "temp"]:
             plot_parameters[param] += best_char['plot_params'][param]
         
-        plot_parameters['temp'][-1] += best_char['pred_temp']
-
+        plot_parameters['temp'][-1] = 273+float(best_char['pred_temp'])
+        #print(best_char['temperature']-273,best_char['pred_temp'],best_char['charging time']/60)
         # Updating current parameters
         current_point = best_char['index']
         soc = best_char['soc']
-        battery_temp = best_char['temperature']+float(best_char['pred_temp'])
+        battery_temp = float(best_char['pred_temp'])+273
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active_charger/60,2)} minutes before reaching charger")
 
     return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters #, timestops, timecharge?, mer?
@@ -179,9 +178,9 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
 
             ## Kolla kostnad         kr
             cost_el = Func_price_from_capa(cap, a)     # Löser sen /jakob_henrik
-            tot_el, time_charge, battery_temp_pred = Func_el_consum_and_time(soc_charger, cap, charging_power)      # Hampus gör idag 24/4
+            tot_el, time_charge, battery_temp_pred = Func_el_consum_and_time(soc_charger, cap, charging_power, temp_at_charger)      # Hampus gör idag 24/4
             tot_cost_el = cost_el * tot_el * money_cost_mult
-        
+            
             ## kolla tid att ladda   tid->kr
             # time_charge = Func_time_charge(soc, cap)           # Lös från FD
             tot_cost_time = tc * time_charge
@@ -192,6 +191,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
         
             ## Kolla avail           true/false      
             avail_procent, avail_num = get_avail_value(avail, state)       # (0-1), (numerical)
+            #print(avail_procent, avail_num)
             # Räkna ut en faktor som används för att väga procent mot antal
             faktor = 3
             avail_factor = avail_procent*faktor + avail_num
@@ -211,7 +211,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'index': index,
                     'distance': distance,
                     'energy consumption': energy_consumption,
-                    'pred_temp': battery_temp_pred-20,
+                    'pred_temp': battery_temp_pred,
                     'temp_iter': temp_iter,
                     'temperature': temp_at_charger,
                     'plot_params': plot_parameters,
@@ -224,21 +224,32 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
 def plot_routes(plot_params):
     names = ["Route 1", "Route 2", "Route 3"]
     sub_names = ["Distance [Km]", "Time [min]"]
-    fig, axes = plt.subplots(3, 1, figsize=(10, 12))
-    fig.subplots_adjust(hspace=0.4)
-
+    #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
+    #fig.subplots_adjust(hspace=0.4)
+    for idx, param in enumerate(['dist','time']):
+        plt.title('Route 3')
+        plt.ylabel("Temperature [K]")
+        plt.axhline(293,color='black',ls='--')
+        plt.axhline(273+45,color='red',ls='--')
+        plt.axhline(273+15,color='green',ls='--')
+        plt.axhline(273+30,color='green',ls='--')
+        x = plot_params[2][param]
+        y = plot_params[2]['temp']
+        plt.ylim(top=273+50)
+        plt.plot(x, y, label=sub_names[idx])
+    """
     for i in range(len(names)):
         fig.suptitle("Plot of the routes")
         for idx, param in enumerate(['dist','time']):
             ax = axes[i]
             ax.set_title(names[i])
             ax.set_ylabel("Temperature [K]")
-            ax.axhline(294,color='black',ls='--')
-            x = plot_params[i]['idx']
+            ax.axhline(293,color='black',ls='--')
+            x = plot_params[i][param]
             y = plot_params[i]['temp']
             ax.plot(x, y, label=sub_names[idx])
             ax.legend()
-
+    """
     plt.show()
 
 
