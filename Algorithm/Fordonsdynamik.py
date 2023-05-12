@@ -220,7 +220,9 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         'idx': [],
         'temp': [],
         'dist': [],
-        'time': []
+        'time': [],
+        'soc': [],
+        'energy': []
     }
     first_trial = True
     prev_soc = 80
@@ -228,7 +230,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
 
     #  Iterating over road points
     while index < len_df-1:
-        
+    
         # For every iteration calculate and add each import
         
         prev_values = \
@@ -243,8 +245,8 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
             'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
-
-
+        if plot_idx == 0:
+            plot_parameters['dist'].append(total_distance/1000)
         
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc, battery_temperature)
@@ -253,11 +255,15 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         dT, t_active = battery_temperature_change(index, soc, battery_temperature, t_active_charger, total_time)
         battery_temperature += dT
         temp_iter += dT
-        
+
+        if plot_idx != 0:
+            plot_parameters['dist'].append(total_distance/1000)
         plot_parameters['temp'].append(battery_temperature)
-        plot_parameters['dist'].append(total_distance/1000)
         plot_parameters['time'].append(total_time/60)
         plot_parameters['idx'].append(index)
+        plot_parameters['energy'].append(total_energy_consumption)
+        plot_parameters['soc'].append(soc)
+
         params = \
         {
             'energy_con': total_energy_consumption, 
@@ -270,8 +276,6 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
             'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
-
-
 
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 

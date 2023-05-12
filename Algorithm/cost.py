@@ -26,8 +26,9 @@ def func_soc_cost(soc: float) -> float:
 def get_avail_value(avail: list, state: list) -> tuple[float, float]:
     """ Func that given a avail_list and a state_list, calculates the availability in procent and total numerical chargers"""
     tot_char_avail = 0
+    state = state.tolist()
     for i in range(len(avail)):
-        #print(avail)
+        
         tot_char_avail += avail[i]*state[i]
 
     # A try/except filter to remove warnings that occour from tot_avail or state[x] being NaN or = 0
@@ -43,7 +44,6 @@ def get_avail_value(avail: list, state: list) -> tuple[float, float]:
     except RuntimeWarning:
         print("runtimeWarning")
         """
-    
     return proc_avail, tot_char_avail
     
     

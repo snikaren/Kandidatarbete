@@ -66,8 +66,7 @@ def init_state(name: str, capacity: int, tot_dict: dict) -> tuple:
 def tm_one_charger(charger_dict: dict): # -> DataFrame
     """ Returns the tranition matrix, for a given charging station """
     trans = pd.crosstab(pd.Series(charger_dict[1:],name='Next',dtype='float64'),
-                        pd.Series(charger_dict[:-1],name='Current',dtype='float64'),normalize=1)
-
+                        pd.Series(charger_dict[:-1],name='Current',dtype='float64'),normalize=1).T
     return trans
 
 def remove_recursive_points(t_dict: dict) -> dict:
@@ -80,8 +79,11 @@ def remove_recursive_points(t_dict: dict) -> dict:
                 rows_to_update = t.index[t.eq(1).any(axis=1)]  # Get rows with at least one value of 1
                 if len(rows_to_update) > 0:
                     r = random.choice(rows_to_update)
-                    t.loc[r] = 0.1  # Set the selected row to 0.1 for all columns
-                    t.loc[t.index != r] = 0.9  # Set other rows to 0.9 for all columns
+                    column_to_update = t.loc[r].eq(1).idxmax()  # Get the column index with the value 1 in the selected row
+                    t.loc[r, column_to_update] = 0.9  # Set the value to 0.9 in the selected column and row
+                    other_columns = t.columns != column_to_update  # Get boolean mask for other columns
+                    random_column = random.choice(t.columns[other_columns])  # Select random column among the other columns
+                    t.loc[r, random_column] = 0.1  # Set the value to 0.1 in the random column and selected row
     return t_dict
 
 def main_pred(total_dict) -> dict:
@@ -107,7 +109,7 @@ class ChargingStationPredictor:
         """ a functiion that runs the state_dist 'steps' number of times to calculate the future distribution"""
         current_state_distribution = self.initial_state_distribution
         
-        for i in range(steps):
+        for _ in range(steps):
             next_state_distribution = np.dot(current_state_distribution, self.transition_matrix)
             current_state_distribution = next_state_distribution
             

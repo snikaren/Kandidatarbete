@@ -253,7 +253,9 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             "dist_to_next_point": float(Current_pd(dist_from_highway_to_next, charger_idx))
         }
         #total_distance = dist_from_highway_to_prev[charger_idx] #Starting distance
-
+        for param in ["idx", "temp", "dist", "time", "soc", "energy"]:
+            plot_params[param] = plot_params[param][:plot_idx]
+        
         for p in [p0, p1, p2, p3]:
             total_energy_consumption = total_energy_consumption + total_energy(p) 
             if p == p2:
@@ -267,13 +269,24 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             battery_temperature += battery_temperature_change(p, soc, battery_temperature)
             temp_iter += battery_temperature_change(p, soc, battery_temperature)
         
-        for param in ["idx", "temp", "dist", "time"]:
-            plot_params[param] = plot_params[param][:plot_idx]
-            plot_params['time'].append(total_time/60)
+        
+        #plot_params['time'].append(total_time/60)
+        """
         for _ in range(2):
             plot_params['temp'].append(battery_temperature)
             plot_params['dist'].append(total_distance/1000)
             plot_params['idx'].append(start_idx)
+            plot_params['soc'].append(soc)
+            plot_params['energy'].append(total_energy_consumption)
+        """
+        plot_params['dist'].append(total_distance/1000)
+        plot_params['time'].append(total_time/60)
+        plot_params['temp'].append(battery_temperature)
+        plot_params['idx'].append(start_idx)
+        plot_params['soc'].append(soc_at_charger)
+        plot_params['energy'].append(total_energy_consumption)
+
+
 
         #print(plot_parameters['dist'], total_distance/1000)
         if soc_at_charger > 20:

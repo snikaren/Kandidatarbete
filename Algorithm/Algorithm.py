@@ -18,10 +18,11 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
     total_cost_chargers = 0
-    battery_temp = 273.15+10
+    battery_temp = 273.15
     total_time = 0
     t_active_charger = 0
     total_energy = 0
+    charging_idx = []
     soc = 100 * max_battery/Battery_joules
     total_driving_time = 0
     best_chargers = {}
@@ -30,7 +31,9 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         'idx': [],
         'temp': [],
         'dist': [],
-        'time': []
+        'time': [],
+        'soc': [],
+        'energy': []
     }
     while True:
         
@@ -45,19 +48,23 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
             total_cost = total_cost_chargers + total_time * time_cost * profil[0] + total_energy/3600000 * profil[1]
             final_soc = char_avail['soc']
 
+            ## Plotting appending
             dist_values = char_avail['plot_params']['dist']
             time_values = char_avail['plot_params']['time']
+            energy_values = char_avail['plot_params']['energy']
 
             plot_parameters['dist'] += [i + plot_parameters['dist'][-1] for i in dist_values]
             plot_parameters['time'] += [i + plot_parameters['time'][-1] for i in time_values]
+            plot_parameters['energy'] += [i + plot_parameters['energy'][-1] for i in energy_values]
 
-            for param in ["idx", "temp"]:
+            for param in ["idx", "temp", "soc"]:
                 plot_parameters[param] += char_avail['plot_params'][param]
+            
             break
         
         # Välj den bästa laddaren
         best_char, profil = choose_charger(char_avail, time_cost, profile)
-        best_char['plot_params']['time'].append((best_char['charging time']+best_char['drive time'])/60)
+        #best_char['plot_params']['time'].append((best_char['charging time']+best_char['drive time'])/60)
         temp_diff, t_active_charger = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+float(best_char['pred_temp'])+273)-293), t_active_charger, total_time)
 
         # Calculate the wanted values
@@ -68,16 +75,19 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_energy += best_char['energy consumption']
 
         # Storing plot parameters
-
+        charging_idx.append(best_char['index']-2)
         dist_values = best_char['plot_params']['dist']
         time_values = best_char['plot_params']['time']
+        energy_values = best_char['plot_params']['energy']
         plot_parameters['dist'] += [i + plot_parameters['dist'][-1] if plot_parameters['dist'] != [] else i for i in dist_values]
         plot_parameters['time'] += [i + plot_parameters['time'][-1] if plot_parameters['time'] != [] else i for i in time_values]
+        plot_parameters['energy'] += [i + plot_parameters['energy'][-1] if plot_parameters['energy'] != [] else i for i in energy_values]
 
-        for param in ["idx", "temp"]:
+        for param in ["idx", "temp", "soc"]:
             plot_parameters[param] += best_char['plot_params'][param]
         
         plot_parameters['temp'][-1] = 273+float(best_char['pred_temp'])
+
         #print(best_char['temperature']-273,best_char['pred_temp'],best_char['charging time']/60)
         # Updating current parameters
         current_point = best_char['index']
@@ -85,7 +95,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         battery_temp = float(best_char['pred_temp'])+273
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active_charger/60,2)} minutes before reaching charger")
 
-    return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters #, timestops, timecharge?, mer?
+    return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters, charging_idx #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_temp: float, t_active_charger: float) -> dict:
     """ Returns the availability of all chargers{capacity} in the selected span"""
@@ -100,11 +110,11 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
     for charger, value in chargers.items():
         for cap in TMs[charger]:
             # set up for pred
-            state, initial_state = init_state(charger, cap, total_dict) 
+            state, initial_state = init_state(charger, cap, total_dict)
+            #print(state.tolist(), initial_state.tolist())
             trans_matrix = TMs[charger][cap]
             time_steps = math.floor(value['time']/60/30)
-            predictor = ChargingStationPredictor(state, trans_matrix, initial_state)
-
+            predictor = ChargingStationPredictor(state.tolist(), trans_matrix.to_numpy(), initial_state.tolist())
             # Runs the predictor the correct amount of steps
             # (soc, state, avail)
             if charger in char_avail:
@@ -121,7 +131,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
                     'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
-                    'plot_params': chargers[charger]['plot_params']
+                    'plot_params': chargers[charger]['plot_params'].copy()
                 }
             else:
                 char_avail[charger] = {cap: \
@@ -137,7 +147,7 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
                     'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
-                    'plot_params': chargers[charger]['plot_params']
+                    'plot_params': chargers[charger]['plot_params'].copy()
                 }
                 }
 
@@ -172,7 +182,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             distance = value['distance']
             energy_consumption = value['energy_consumption']
             temp_at_charger = value['temp_at_charger']
-            plot_parameters = value['plot_params']
+            plot_parameters = value['plot_params'].copy()
             plot_idx = value['plot_index']
             temp_iter = value['temp_iter']
 
@@ -214,29 +224,34 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'pred_temp': battery_temp_pred,
                     'temp_iter': temp_iter,
                     'temperature': temp_at_charger,
-                    'plot_params': plot_parameters,
+                    'plot_params': plot_parameters.copy(),
                     'plot_index': plot_idx
                 }
 
 
     return best_charger, profile
 
-def plot_routes(plot_params):
+def plot_routes(plot_params, charging_idxs):
     names = ["Route 1", "Route 2", "Route 3"]
     sub_names = ["Distance [Km]", "Time [min]"]
     #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     #fig.subplots_adjust(hspace=0.4)
     for idx, param in enumerate(['dist','time']):
         plt.title('Route 3')
-        plt.ylabel("Temperature [K]")
-        plt.axhline(293,color='black',ls='--')
-        plt.axhline(273+45,color='red',ls='--')
-        plt.axhline(273+15,color='green',ls='--')
-        plt.axhline(273+30,color='green',ls='--')
+        plt.ylabel("SoC")
+        #plt.axhline(293,color='black',ls='--')
+        #plt.axhline(273+45,color='red',ls='--')
+        #plt.axhline(273+15,color='green',ls='--')
+        #plt.axhline(273+30,color='green',ls='--')
         x = plot_params[2][param]
-        y = plot_params[2]['temp']
-        plt.ylim(top=273+50)
+        y = plot_params[2]['soc']
+        #plt.ylim(top=273+50)
         plt.plot(x, y, label=sub_names[idx])
+        plt.legend()
+        for i in charging_idxs[2]:
+            x_p = plot_params[2][param][i]
+            y_p = plot_params[2]['soc'][i]
+            plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
     """
     for i in range(len(names)):
         fig.suptitle("Plot of the routes")
@@ -268,21 +283,22 @@ def main():
     total_energy = [0,0,0]
     final_socs = [0,0,0]
     plot_parameters = [0,0,0]
+    charging_idxs = [0,0,0]
     chargersList = [None,None,None]
     time_cost = 10  #ger bara ett nummer för tester
-    min_cost, chargersList[0], total_road_time[0], final_socs[0], total_energy[0], plot_parameters[0] = minimize_road_cost(roads[0], TMs, time_cost, profile)       # returns the cost of choosing that road
+    min_cost, chargersList[0], total_road_time[0], final_socs[0], total_energy[0], plot_parameters[0], charging_idxs[0] = minimize_road_cost(roads[0], TMs, time_cost, profile)       # returns the cost of choosing that road
     costs[0] = min_cost
     best_road_idx = 0
 
     for i in range(1, len(roads)):
-        tot_cost, chargersList[i], total_road_time[i], final_socs[i], total_energy[i], plot_parameters[i] = minimize_road_cost(roads[i], TMs, time_cost, profile)
+        tot_cost, chargersList[i], total_road_time[i], final_socs[i], total_energy[i], plot_parameters[i], charging_idxs[i] = minimize_road_cost(roads[i], TMs, time_cost, profile)
         costs[i] = tot_cost
         if tot_cost < min_cost:
             min_cost = tot_cost
             best_road_idx = i
     print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
     print("--- %s seconds ---" % (time.time() - start_time))
-    plot_routes(plot_parameters)
+    plot_routes(plot_parameters, charging_idxs)
     
     return roads[best_road_idx], min_cost
 
