@@ -86,7 +86,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         for param in ["idx", "temp", "soc"]:
             plot_parameters[param] += best_char['plot_params'][param]
         
-        plot_parameters['temp'][-1] = 273+float(best_char['pred_temp'])
+        #plot_parameters['temp'][-1] = 273+float(best_char['pred_temp'])
 
         #print(best_char['temperature']-273,best_char['pred_temp'],best_char['charging time']/60)
         # Updating current parameters
@@ -237,15 +237,15 @@ def plot_routes(plot_params, charging_idxs):
     #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     #fig.subplots_adjust(hspace=0.4)
     for idx, param in enumerate(['dist','time']):
-        plt.title('Route 3, ambient temp = 0')
-        plt.ylabel("Battery temperature")
-        #plt.axhline(293,color='black',ls='--')
-        #plt.axhline(273+45,color='red',ls='--')
-        #plt.axhline(273+15,color='green',ls='--')
-        #plt.axhline(273+30,color='green',ls='--')
+        plt.title('Route 3, ambient temp = 10')
+        plt.ylabel("Battery Temperature [K]")
+        plt.axhline(293,color='black',ls='--')
+        plt.axhline(273+45,color='red',ls='--')
+        plt.axhline(273+15,color='green',ls='--')
+        plt.axhline(273+30,color='green',ls='--')
         x = plot_params[2][param]
         y = plot_params[2]['temp']   # energy_consumption. soc, temp
-        #plt.ylim(top=273+50)
+        plt.ylim(top=273+50, bottom=280)
         plt.plot(x, y, label=sub_names[idx])
         plt.legend()
         for i in charging_idxs[2]:
@@ -283,6 +283,7 @@ def main():
     total_road_time = [0,0,0]
     costs = [0,0,0]
     total_energy = [0,0,0]
+    average_speed = []
     final_socs = [0,0,0]
     plot_parameters = [0,0,0]
     charging_idxs = [0,0,0]
@@ -298,7 +299,9 @@ def main():
         if tot_cost < min_cost:
             min_cost = tot_cost
             best_road_idx = i
-    print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}")
+    for l in range(len(roads)):
+        average_speed.append(plot_parameters[l]['dist'][-1]/total_road_time[l][1])
+    print(f"Minimum cost: {min_cost}, \n Charger list:\n Road 1: {chargersList[0]} \n Road 2: {chargersList[1]} \n Road 3: {chargersList[2]}, \n Total road time: {total_road_time}, \n Final socs: {final_socs}, \n Total energy: {total_energy}, \n Costs: {costs}, \n Average speeds: {average_speed}")
     print("--- %s seconds ---" % (time.time() - start_time))
     plot_routes(plot_parameters, charging_idxs)
     

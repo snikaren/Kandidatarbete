@@ -247,6 +247,8 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         }
         if plot_idx == 0:
             plot_parameters['dist'].append(total_distance/1000)
+            plot_parameters['soc'].append(80)
+            plot_parameters['temp'].append(battery_temperature)
         
         total_energy_consumption += total_energy(index)
         soc -= s_o_c_change(index, soc, battery_temperature)
@@ -258,11 +260,12 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
 
         if plot_idx != 0:
             plot_parameters['dist'].append(total_distance/1000)
-        plot_parameters['temp'].append(battery_temperature)
+            plot_parameters['soc'].append(soc)
+            plot_parameters['temp'].append(battery_temperature)
         plot_parameters['time'].append(total_time/60)
         plot_parameters['idx'].append(index)
-        plot_parameters['energy'].append(total_energy_consumption)
-        plot_parameters['soc'].append(soc)
+        plot_parameters['energy'].append(total_energy_consumption/3600000)
+        
 
         params = \
         {

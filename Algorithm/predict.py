@@ -130,6 +130,15 @@ def test_pred():
 
     print(predictor.predict(steps=1))
     print(predictor.predict(steps=2))
-    
-#if __name__ == '__main__':
-    #test_pred()
+
+if __name__ == '__main__':
+    num = 0
+    tot_dict = dict_tot()
+    state, initial_state = init_state("25p56g", 150, tot_dict)
+    tm = main_pred(tot_dict)["25p56g"][150]
+    print(tot_dict["25p56g"][150])
+    predictor = ChargingStationPredictor(state.tolist(), tm.to_numpy(), initial_state.tolist())
+    avail = predictor.predict(48)
+    for i in range(len(avail)):
+        num += avail[i]*state[i]
+    print(num, avail, initial_state.tolist(), tm)
