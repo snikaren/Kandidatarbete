@@ -18,7 +18,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         returnerar kostnaden, en lista på chargers{id_char, time,....}"""
     current_point = 1
     total_cost_chargers = 0
-    battery_temp = 273.15
+    battery_temp = t_amb
     total_time = 0
     t_active_charger = 0
     total_energy = 0
@@ -237,21 +237,23 @@ def plot_routes(plot_params, charging_idxs):
     #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     #fig.subplots_adjust(hspace=0.4)
     for idx, param in enumerate(['dist','time']):
-        plt.title('Route 3')
-        plt.ylabel("SoC")
+        plt.title('Route 3, ambient temp = 0')
+        plt.ylabel("Battery temperature")
         #plt.axhline(293,color='black',ls='--')
         #plt.axhline(273+45,color='red',ls='--')
         #plt.axhline(273+15,color='green',ls='--')
         #plt.axhline(273+30,color='green',ls='--')
         x = plot_params[2][param]
-        y = plot_params[2]['soc']
+        y = plot_params[2]['temp']   # energy_consumption. soc, temp
         #plt.ylim(top=273+50)
         plt.plot(x, y, label=sub_names[idx])
         plt.legend()
         for i in charging_idxs[2]:
             x_p = plot_params[2][param][i]
-            y_p = plot_params[2]['soc'][i]
+            y_p = plot_params[2]['temp'][i]
             plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
+
+
     """
     for i in range(len(names)):
         fig.suptitle("Plot of the routes")

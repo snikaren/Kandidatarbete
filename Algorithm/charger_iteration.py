@@ -282,7 +282,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
         plot_params['dist'].append(total_distance/1000)
         plot_params['time'].append(total_time/60)
         plot_params['temp'].append(battery_temperature)
-        plot_params['idx'].append(start_idx)
+        plot_params['idx'].append(start_idx)        # Kan det vara denna som behöver bytas ut med +-1
         plot_params['soc'].append(soc_at_charger)
         plot_params['energy'].append(total_energy_consumption)
 
