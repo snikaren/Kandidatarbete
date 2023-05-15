@@ -302,7 +302,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
                 'temp_iter': temp_iter,
                 'temp_at_charger': batt_temp_at_charger,
                 'index': start_idx + 1,
-                'highway_dist': charger_dist,
+                'charger_dist': distance_charger,
                 'plot_index': plot_idx,
                 'plot_params': plot_params
             }

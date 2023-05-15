@@ -28,8 +28,8 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     soc = 100 * max_battery/Battery_joules
     total_driving_time = 0
     best_chargers = {}
-    plot_parameters = \
     charger_distances = []
+    plot_parameters = \
     {
         'idx': [],
         'temp': [],
@@ -74,7 +74,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         best_char, profil = choose_charger(char_avail, time_cost, profile)
         #best_char['plot_params']['time'].append((best_char['charging time']+best_char['drive time'])/60)
         temp_diff, t_active_charger = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+float(best_char['pred_temp'])+273)-293), t_active_charger, total_time)
-        #charger_distances.append(best_char['distance']/1000)
+        
         # Calculate the wanted values
         best_chargers[best_char['name']] = f"{round(best_char['soc charger'],1)}%"
         total_time += best_char['charging time'] + best_char['drive time']
@@ -82,7 +82,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         total_distance += best_char['distance']
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
-
+        charger_distances.append((total_time-best_char['charging time'])/3600)
         
         charging_idx.append(best_char['index']-2)
 
@@ -144,7 +144,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
                     'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
-                    'plot_params': chargers[charger]['plot_params'].copy()
+                    'plot_params': chargers[charger]['plot_params'].copy(),
+                    'charger_dist': chargers[charger]['charger_dist']
                 }
             else:
                 char_avail[charger] = {cap: \
@@ -160,7 +161,8 @@ def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_te
                     'temp_at_charger': chargers[charger]['temp_at_charger'],
                     'temp_iter': chargers[charger]['temp_iter'],
                     'plot_index': chargers[charger]['plot_index'],
-                    'plot_params': chargers[charger]['plot_params'].copy()
+                    'plot_params': chargers[charger]['plot_params'].copy(),
+                    'charger_dist': chargers[charger]['charger_dist']
                 }
                 }
 
@@ -193,6 +195,7 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
             drive_time = value['time']
             index = value['index']
             distance = value['distance']
+            dist_to_charger = value['charger_dist']
             energy_consumption = value['energy_consumption']
             temp_at_charger = value['temp_at_charger']
             plot_parameters = value['plot_params'].copy()
@@ -238,7 +241,8 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
                     'temp_iter': temp_iter,
                     'temperature': temp_at_charger,
                     'plot_params': plot_parameters.copy(),
-                    'plot_index': plot_idx
+                    'plot_index': plot_idx,
+                    'charger_dist': dist_to_charger
                 }
 
 
