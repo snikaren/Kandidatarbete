@@ -22,6 +22,8 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     total_time = 0
     t_active_charger = 0
     total_energy = 0
+    total_distance = 0
+    l = 0
     charging_idx = []
     soc = 100 * max_battery/Battery_joules
     total_driving_time = 0
@@ -44,9 +46,14 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         if done:
             total_time += char_avail['time']
             total_driving_time += char_avail['time']
+            total_distance += char_avail['distance']
             total_energy = char_avail['energy_con'] + total_energy
             total_cost = total_cost_chargers + total_time * time_cost * profil[0] + total_energy/3600000 * profil[1]
             final_soc = char_avail['soc']
+            """
+            for param in ['idx', 'temp', 'dist', 'energy', 'soc']:
+                plot_parameters[param].append()
+            """
 
             ## Plotting appending
             dist_values = char_avail['plot_params']['dist']
@@ -71,11 +78,15 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         best_chargers[best_char['name']] = f"{round(best_char['soc charger'],1)}%"
         total_time += best_char['charging time'] + best_char['drive time']
         total_driving_time += best_char['drive time']
+        total_distance += best_char['distance']
         total_cost_chargers += best_char['charger cost']
         total_energy += best_char['energy consumption']
 
-        # Storing plot parameters
+        
         charging_idx.append(best_char['index']-2)
+
+        # Storing plot parameters
+        
         dist_values = best_char['plot_params']['dist']
         time_values = best_char['plot_params']['time']
         energy_values = best_char['plot_params']['energy']
@@ -93,8 +104,9 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         current_point = best_char['index']
         soc = best_char['soc']
         battery_temp = float(best_char['pred_temp'])+273
+                
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active_charger/60,2)} minutes before reaching charger")
-
+    print(total_distance/1000)
     return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters, charging_idx #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_temp: float, t_active_charger: float) -> dict:
@@ -237,25 +249,24 @@ def plot_routes(plot_params, charging_idxs):
     colors = ["b", "m"]
     #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     #fig.subplots_adjust(hspace=0.4)
-    for route in range(len(names)):
-        for idx, param in enumerate(['dist','time']):
-            plt.clf()
-            plt.title(f'{names[route]}, ambient temp = 0')
-            plt.ylabel("Energy Consumption [kWh]")
-            #plt.axhline(293,color='black',ls='--')
-            #plt.axhline(273+45,color='red',ls='--')
-            #plt.axhline(273+15,color='green',ls='--')
-            #plt.axhline(273+30,color='green',ls='--')
-            x = plot_params[route][param]
-            y = plot_params[route]['energy']   # energy_consumption. soc, temp
-            #plt.ylim(top=273+50, bottom=260)
-            plt.plot(x, y, label=sub_names[idx], color=colors[idx])
-            plt.legend()
-            for i in charging_idxs[route]:
-                x_p = plot_params[route][param][i]
-                y_p = plot_params[route]['energy'][i]
-                plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
-            plt.show()
+    for idx, param in enumerate(['dist','time']):
+        plt.clf()
+        plt.title(f'{names[2]}, ambient temp = 10')
+        plt.ylabel("Battery Temperature [K]")
+        plt.axhline(293,color='black',ls='--')
+        plt.axhline(273+45,color='red',ls='--')
+        plt.axhline(273+15,color='green',ls='--')
+        plt.axhline(273+30,color='green',ls='--')
+        x = plot_params[2][param]
+        y = plot_params[2]['temp']   # energy_consumption. soc, temp
+        plt.ylim(top=273+50, bottom=260)
+        plt.plot(x, y, label=sub_names[idx], color=colors[idx])
+        plt.legend()
+        for i in charging_idxs[2]:
+            x_p = plot_params[2][param][i]
+            y_p = plot_params[2]['temp'][i]
+            plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
+        plt.show()
     
 
     

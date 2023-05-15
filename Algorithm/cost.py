@@ -17,7 +17,7 @@ def Func_el_consum_and_time(soc: float, cap: int, charging_powah, battery_temp) 
 
 def func_soc_cost(soc: float) -> float:
     """ Func that adds a cost if we charge with high soc"""
-    if soc > 26:
+    if soc > 34:
         multiple_cost = (soc - 20)/ 3      # makes charging early bad
     else:
         multiple_cost = 2

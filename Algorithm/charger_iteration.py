@@ -262,6 +262,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
                 soc_at_charger = soc
                 soc = 80
                 batt_temp_at_charger = battery_temperature
+                distance_charger = total_distance
             soc -= s_o_c_change(p, soc)
             total_distance += (dist_const_velo(p) + dist_acc(p))
             charger_dist += (dist_const_velo(p) + dist_acc(p))
@@ -279,7 +280,7 @@ def iterate_charger(chargers: dict, route: int) -> dict:
             plot_params['soc'].append(soc)
             plot_params['energy'].append(total_energy_consumption)
         """
-        plot_params['dist'].append(total_distance/1000)
+        plot_params['dist'].append(distance_charger/1000)
         plot_params['time'].append(total_time/60)
         plot_params['temp'].append(battery_temperature)
         plot_params['idx'].append(start_idx)        # Kan det vara denna som behöver bytas ut med +-1

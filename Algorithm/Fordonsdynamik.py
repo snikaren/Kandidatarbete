@@ -233,7 +233,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
     
         # For every iteration calculate and add each import
         
-        prev_values = \
+        values = \
         {
             'energy_con': total_energy_consumption, 
             'soc': soc, 
@@ -245,27 +245,13 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
             'plot_index': plot_idx,
             'plot_params': plot_parameters
         }
+        """
         if plot_idx == 0:
             plot_parameters['dist'].append(total_distance/1000)
             plot_parameters['soc'].append(80)
             plot_parameters['temp'].append(battery_temperature)
-        
-        total_energy_consumption += total_energy(index)
-        soc -= s_o_c_change(index, soc, battery_temperature)
-        total_distance += (dist_const_velo(index) + dist_acc(index))
-        total_time += (time_acc(index) + time_constant_velo(index))
-        dT, t_active = battery_temperature_change(index, soc, battery_temperature, t_active_charger, total_time)
-        battery_temperature += dT
-        temp_iter += dT
+        """
 
-        if plot_idx != 0:
-            plot_parameters['dist'].append(total_distance/1000)
-            plot_parameters['soc'].append(soc)
-            plot_parameters['temp'].append(battery_temperature)
-        plot_parameters['time'].append(total_time/60)
-        plot_parameters['idx'].append(index)
-        plot_parameters['energy'].append(total_energy_consumption/3600000)
-        
 
         params = \
         {
@@ -283,7 +269,7 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
         # Total energy in battery: 75kWh * 3600 * 1000 joules = 270 000 kJ
 
         # If Soc is less than 40 procent, look for chargers
-        if 20 < soc < 40:
+        if 20 < soc < 50:
             # Kollar nu bara punkter efter soc=40, men inte alla laddare efter 40... 
             # Borde köra att funktionen kollar laddare efter idx-1 när vi når soc<40
     
@@ -293,45 +279,46 @@ def iterate(idx_start: int, route: int, soc: float, batt_temp: float, t_active_c
             except:
                 pass
 
-            # First time we get soc < 40, we collect all the chargers that were in the previous interval
-            if first_trial:
-                try:
-                    # Grabs chargers associated with data points
-                    chargers_prev = tuple(map(str, Current_pd(df, index-1)['next chargers'].split(', ')))
-                    for charger in chargers_prev:
-                        if charger != "0":
-                            #charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature, road_2)
-                            charge_dict[charger] = prev_values
-                except:
-                    pass
-                first_trial = False
-            
             # If there is a charger close, save it
             for charger in chargers:
                 if charger != "0":
                     #charge_dict[charger] = (soc, total_time, index, total_energy_consumption, total_distance, battery_temperature, road_2)
-                    charge_dict[charger] = \
-                    {
-                        'energy_con': total_energy_consumption, 
-                        'soc': soc, 
-                        'distance': total_distance, 
-                        'time': total_time, 
-                        'temp': battery_temperature,
-                        'index': index,
-                        'temp_iter': temp_iter,
-                        'plot_index': plot_idx,
-                        'plot_params': plot_parameters
-                        
-                    }
+
+                    charge_dict[charger] = values
                     
         elif soc < 20:
+            
             # charge_dict = iterate_charger(charge_dict, battery_temperature, soc, index)    "" ""
             charge_dict_new = iterate_charger(charge_dict, route)
             ##soc = 80    # nyladdat batteri
             return charge_dict_new, False
+        
+        if plot_idx == 0:
+            plot_parameters['soc'].append(80)
+            plot_parameters['dist'].append(total_distance/1000)
+            plot_parameters['temp'].append(battery_temperature)
 
+        total_energy_consumption += total_energy(index)
+        soc -= s_o_c_change(index, soc, battery_temperature)
+        total_distance += (dist_const_velo(index) + dist_acc(index))
+        total_time += (time_acc(index) + time_constant_velo(index))
+        dT, t_active = battery_temperature_change(index, soc, battery_temperature, t_active_charger, total_time)
+        battery_temperature += dT
+        temp_iter += dT
+
+        if plot_idx != 0:
+            plot_parameters['soc'].append(soc)
+            plot_parameters['dist'].append(total_distance/1000)
+            plot_parameters['temp'].append(battery_temperature)
+        
+        
+        plot_parameters['time'].append(total_time/60)
+        plot_parameters['idx'].append(index)
+        plot_parameters['energy'].append(total_energy_consumption/3600000)
+        
         index += 1
         plot_idx += 1
+
     return params, True
 
 

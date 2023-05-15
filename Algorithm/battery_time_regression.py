@@ -164,8 +164,8 @@ def main(soc: float, cap: int, charging_powah, battery_temp) -> tuple:
     soc_value = init_soc
     final_soc = 80
     charger = cap # int(input("Enter the charger power provided: "))
-    if charger > 250:
-        charger = 250
+    if charger > 150:
+        charger = 150
 
     batteritemp = battery_temp
 
