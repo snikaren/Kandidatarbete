@@ -113,6 +113,7 @@ class ChargingStationPredictor:
             next_state_distribution = np.dot(current_state_distribution, self.transition_matrix)
             current_state_distribution = next_state_distribution
             
+            
         return current_state_distribution
 
 def test_pred():
@@ -133,12 +134,17 @@ def test_pred():
 
 if __name__ == '__main__':
     num = 0
+    lum = 0
     tot_dict = dict_tot()
     state, initial_state = init_state("25p56g", 150, tot_dict)
+    e_init_state = [0.9,0.08,0.01,0.01]
     tm = main_pred(tot_dict)["25p56g"][150]
-    print(tot_dict["25p56g"][150])
-    predictor = ChargingStationPredictor(state.tolist(), tm.to_numpy(), initial_state.tolist())
-    avail = predictor.predict(48)
+    #print(tot_dict["25p56g"][150])
+    predictor = ChargingStationPredictor(state.tolist(), tm.to_numpy(), e_init_state)
+    print(predictor.initial_state_distribution)
+    avail, steps = predictor.predict(1000)
     for i in range(len(avail)):
         num += avail[i]*state[i]
-    print(num, avail, initial_state.tolist(), tm)
+    for i in range(len(avail)):
+        lum += e_init_state[i]*state[i]
+    print(num, lum, avail, tm, steps)

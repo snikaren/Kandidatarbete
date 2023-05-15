@@ -36,7 +36,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         'energy': []
     }
     while True:
-        
+
         # Simuluera fram tills vi måste ladda, hämtar laddare i området, och ger parametrarna för dessa
         char_avail, done = get_chargers_avail(current_point, road, TMs, soc, battery_temp, t_active_charger)
 
@@ -234,40 +234,31 @@ def choose_charger(char_avail: dict, tc: float, profile: str) -> tuple[str, floa
 def plot_routes(plot_params, charging_idxs):
     names = ["Route 1", "Route 2", "Route 3"]
     sub_names = ["Distance [Km]", "Time [min]"]
+    colors = ["b", "m"]
     #fig, axes = plt.subplots(3, 1, figsize=(10, 12))
     #fig.subplots_adjust(hspace=0.4)
-    for idx, param in enumerate(['dist','time']):
-        plt.title('Route 3, ambient temp = 10')
-        plt.ylabel("Battery Temperature [K]")
-        plt.axhline(293,color='black',ls='--')
-        plt.axhline(273+45,color='red',ls='--')
-        plt.axhline(273+15,color='green',ls='--')
-        plt.axhline(273+30,color='green',ls='--')
-        x = plot_params[2][param]
-        y = plot_params[2]['temp']   # energy_consumption. soc, temp
-        plt.ylim(top=273+50, bottom=280)
-        plt.plot(x, y, label=sub_names[idx])
-        plt.legend()
-        for i in charging_idxs[2]:
-            x_p = plot_params[2][param][i]
-            y_p = plot_params[2]['temp'][i]
-            plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
-
-
-    """
-    for i in range(len(names)):
-        fig.suptitle("Plot of the routes")
+    for route in range(len(names)):
         for idx, param in enumerate(['dist','time']):
-            ax = axes[i]
-            ax.set_title(names[i])
-            ax.set_ylabel("Temperature [K]")
-            ax.axhline(293,color='black',ls='--')
-            x = plot_params[i][param]
-            y = plot_params[i]['temp']
-            ax.plot(x, y, label=sub_names[idx])
-            ax.legend()
-    """
-    plt.show()
+            plt.clf()
+            plt.title(f'{names[route]}, ambient temp = 0')
+            plt.ylabel("Energy Consumption [kWh]")
+            #plt.axhline(293,color='black',ls='--')
+            #plt.axhline(273+45,color='red',ls='--')
+            #plt.axhline(273+15,color='green',ls='--')
+            #plt.axhline(273+30,color='green',ls='--')
+            x = plot_params[route][param]
+            y = plot_params[route]['energy']   # energy_consumption. soc, temp
+            #plt.ylim(top=273+50, bottom=260)
+            plt.plot(x, y, label=sub_names[idx], color=colors[idx])
+            plt.legend()
+            for i in charging_idxs[route]:
+                x_p = plot_params[route][param][i]
+                y_p = plot_params[route]['energy'][i]
+                plt.plot(x_p, y_p, marker="o", markersize=6, markeredgecolor="red", markerfacecolor="red")
+            plt.show()
+    
+
+    
 
 
 def main():
