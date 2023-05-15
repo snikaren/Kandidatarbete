@@ -29,6 +29,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
     total_driving_time = 0
     best_chargers = {}
     plot_parameters = \
+    charger_distances = []
     {
         'idx': [],
         'temp': [],
@@ -73,7 +74,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         best_char, profil = choose_charger(char_avail, time_cost, profile)
         #best_char['plot_params']['time'].append((best_char['charging time']+best_char['drive time'])/60)
         temp_diff, t_active_charger = battery_temperature_change(best_char['index']-1, best_char['soc'], abs((best_char['temp_iter']+float(best_char['pred_temp'])+273)-293), t_active_charger, total_time)
-
+        #charger_distances.append(best_char['distance']/1000)
         # Calculate the wanted values
         best_chargers[best_char['name']] = f"{round(best_char['soc charger'],1)}%"
         total_time += best_char['charging time'] + best_char['drive time']
@@ -106,7 +107,7 @@ def minimize_road_cost(road: int, TMs: dict, time_cost: float, profile: str) -> 
         battery_temp = float(best_char['pred_temp'])+273
                 
         print(f"Charging at: {best_char['name']} with SoC: {round(best_char['soc charger'],2)}% and preheating {round(t_active_charger/60,2)} minutes before reaching charger")
-    print(total_distance/1000)
+    print(charger_distances)
     return total_cost, best_chargers, (total_time/3600, total_driving_time/3600), final_soc, total_energy, plot_parameters, charging_idx #, timestops, timecharge?, mer?
 
 def get_chargers_avail(idx_start: int, road: int, TMs: dict, soc: float, batt_temp: float, t_active_charger: float) -> dict:
