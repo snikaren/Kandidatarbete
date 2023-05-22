@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="data.js"></script>
+        <style>
+        #Volvocar {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        #map {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50%;
+            height: 850px;
+            }
+        
+        #car-image {
+            width: 500px; /* Adjust the width as desired */
+            height: auto; /* Maintain aspect ratio */
+            position: absolute;
+            top: 500px; /* Adjust the vertical position */
+            left: 200px; /* Adjust the horizontal position */
+        }
+        
+        </style>
+    </head>
+
+    <head>
+        <style>
+            .textbox {
+                width: 400px;
+                padding: 10px;
+                border: 2px solid white;
+                border-radius: 5px;
+                background-color: white;
+                display: inline-block;
+                margin-right: 10px;
+            }
+        </style>
+
+        <style>
+            .start-button {
+            display: inline-block;
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left:35px ;
+            margin-top: 10px;
+                }
+        </style>
+        <style>
+
+            .container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 50px;
+            margin-left: 10px;
+            
+            }
+            
+            .box {
+            background-color: green;
+            color: white;
+            padding: 2px 20px;
+            border-radius: 5px;
+            margin-left: 5px;
+            /*margin-right: 100px;*/
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+                }
+        </style>
+
+
+        </style>
+
+        <style>
+            .container {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 350px;
+            margin-left: 30px;
+            
+        }
+
+            .button {
+                background-color: black;
+                color: white;
+                padding: 20px 40px;
+                border-radius: 5px;
+                margin-left: 50px;
+                /*margin-right: 100px;*/
+                font-size: 18px;
+
+                text-align: center;
+                cursor: pointer;
+                
+        }
+
+    </style>
+    
+
+    </head>
+
+
+
+    <body>
+        <button class="start-button">START</button>
+
+        <div class="textbox">
+            <h1>Start time: 12:00 </h1>
+            <h1>Expected arrival time: 17:59</h1>
+            <p></p>
+        </div>
+
+        <div class="container">
+            <button class="box">
+                <h3>Charging #1</h3>
+                <h4>SOC: 38.1 %</h4> 
+                <h4>Distance traveled: 110.9 km </h4>
+                <h4>Arrival time: 13:33 </h4>
+                <h4>Charging duration: 20 min </h4>
+            </button>
+            <button class="box">
+                <h3>Charging #2</h3>
+                <h4>SOC: 32.2 % </h4> 
+                <h4>Distance traveled: 212 km </h4>
+                <h4>Arrival time: 15:03 </h4>
+                <h4>Charging duration: 22 min </h4>
+            </button>
+            <button class="box">
+                <h3>Charging #3</h3>
+                <h4>SOC: 21.5 % </h4> 
+                <h4>Distance traveled: 349.4 km</h4>
+                <h4>Arrival time: 16:45 </h4>
+                <h4>Charging duration: 26 min </h4>
+            </button>
+        </div>
+        
+        <div class="container">
+            <button class="button">Minimize cost</button>
+            <button class="button">Minimize time</button>
+            <button class="button">Minimize energy</button>
+        </div>
+
+    
+
+
+        
+
+
+        <h3></h3>
+        <div id ="map"></div>
+
+        <script>
+            //animation
+            /*
+        Volvocar.onclick = function() {
+            let start = Date.now();
+            let timer = setInterval(function() {
+                let timePassed = Date.now() - start;
+                Volvocar.style.left = timePassed / 5 + 'px';
+                if (timePassed > 2000) clearInterval(timer);
+            }, 20);
+    }*/
+
+
+            function initMap(){
+                let Start = {lat: 57.691750, lng: 11.978087};
+                let End = {lat: 59.851583, lng: 17.628906};
+                const myLatlng = {lat: 57.691750, lng: 11.978087};
+                let map = new google.maps.Map(
+                    document.getElementById("map"), {zoom: 4, center: myLatlng}
+                );
+
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+
+                // Define the start and end points
+                var start = new google.maps.LatLng(57.691750, 11.978087);
+                var end = new google.maps.LatLng(59.851583, 17.628906);
+
+                // Define the request parameters for the Directions Service
+                
+                var route = {
+                origin: start,
+                destination: end,
+                travelMode: google.maps.TravelMode.DRIVING,
+                /*waypoints: [{
+                    location: latLng,
+                    stopover: false
+                }]*/
+            };
+        
+
+                var caricon = {
+                    url: 'http://maps.google.com/mapfiles/kml/pal4/icon15.png',
+                    size: new google.maps.Size(40, 40),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(16, 32)
+                };
+
+                directionsService.route(route, function(result, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsRenderer.setDirections(result);
+                        let carmarker = new google.maps.Marker({position: result.routes[0].legs[0].start_location ,map: map,icon: caricon});
+                    
+                        let step = 0; //initial position in the overview_path array
+    
+                        let numSteps = result.routes[0].overview_path.length; //array of latlng across the whole route
+                        let valuestep = 0;
+
+                        let interval = setInterval(function(){ //loops through each latlng in overview array
+                            valuestep += 0.1;
+                            if (valuestep > 1){
+                                valuestep = 0;
+                                step ++;
+                            }
+
+                            //step = (step+1) % numSteps; //s.a vi kommer tillbaka till slutpos vid mål
+                            //let nextPosition = result.routes[0].overview_path[step];
+                            if (step>=numSteps){
+                                clearInterval(interval);
+                            //carmarker.setPosition(result.routes[0].legs[step].start_location);
+                            }else{
+                            //carmarker.setPosition(nextPosition)
+                                let prevPosition = result.routes[0].overview_path[step]
+                                let nextPosition = result.routes[0].overview_path[step+1];
+                                let position = google.maps.geometry.spherical.interpolate(prevPosition, nextPosition, valuestep);
+                                carmarker.setPosition(position);
+
+                        }
+                    }, 50);
+                }
+            });
+            
+            
+
+
+            
+
+                /*
+                directionsService.route(route, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer1.setDirections(result);
+                    }
+                });*/
+
+
+                /*
+                // Call the Directions Service to get the best route Göteborg-Jönköping-Uppsala
+                directionsService.route(Jon, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                directionsRenderer2.setDirections(result);
+                }
+                });
+
+                */
+
+
+                var startIcon = {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                    size: new google.maps.Size(40, 40),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(16, 32)
+                };
+                var chargeicon = {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                    size: new google.maps.Size(32, 32),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(16, 32)
+                };
+                var endicon = {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    size: new google.maps.Size(40, 40),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(16, 32)
+                };
+                var speedicon = {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                    size: new google.maps.Size(40, 40),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(16, 32)
+                };
+                        
+
+                //let startmarker = new google.maps.Marker({position: Start, map: map,icon:startIcon});
+                //let endmarker = new google.maps.Marker({position: End, map: map,icon:endicon});
+        
+                let i = 0;
+                for (let key in myDictionary) {
+                    const value = myDictionary[key];
+                    
+                    if ((array[i] === 'wwgz3' || array[i] === 'gje9rm' || array[i] === 'wqqg2z')) {
+                    let pos = { lat: parseFloat(key), lng: parseFloat(value) };
+                    let title = array[i];
+                    let markerObj = new google.maps.Marker({ position: pos, map: map, icon: chargeicon, title: title });
+                    }
+                
+                    i++;
+                    }
+
+                /*let i = 0
+                for (let key in myDictionary){
+                    let value = myDictionary[key];
+                    let pos = { lat: parseFloat(key), lng: parseFloat(value)};
+                    let title = array[i];
+                    let markerObj = new google.maps.Marker({position: pos , map: map,icon:chargeicon,title:title});
+                    i++;
+                };*/
+                    
+                    
+                /*for (let key in hastdict){
+                    let value = hastdict[key];
+                    let pos = { lat: parseFloat(key), lng: parseFloat(value)};
+                    let markerObj = new google.maps.Marker({position: pos , map: map,icon:speedicon});
+                }*/
+
+                /*
+                Get lat and lng
+                */
+                let infoWindow = new google.maps.InfoWindow({
+                    content: "Click the map to get latlong",
+                    position: myLatlng,
+                });
+                infoWindow.open(map);
+                map.addListener("click",(mapsMouseEvent) => {
+                    infoWindow.close();
+                    infoWindow = new google.maps.InfoWindow({
+                        position: mapsMouseEvent.latLng,
+                    });
+                    infoWindow.setContent(
+                        JSON.stringify(mapsMouseEvent.latLng.toJSON(),null,2)
+                    );
+                    infoWindow.open(map);
+                });
+
+            }
+            window.initMap = initMap;
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4-zum5PGhL_KPMm7HWSmO_ATH6W8jZw4&callback=initMap"></script>
+    </body>
+</html>
+
